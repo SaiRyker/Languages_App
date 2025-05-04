@@ -12,6 +12,7 @@ import { CoursesModule } from './courses/courses.module';
 import { CourseModulesModule } from './course_modules/course_modules.module';
 import { LessonsModule } from './lessons/lessons.module';
 import { LessonMaterialsModule } from './lesson_materials/lesson_materials.module';
+import { UserNotificationsModule } from './user_notifications/user_notifications.module';
 
 @Module({
     controllers: [],
@@ -37,6 +38,7 @@ import { LessonMaterialsModule } from './lesson_materials/lesson_materials.modul
         CourseModulesModule,
         LessonsModule,
         LessonMaterialsModule,
+        UserNotificationsModule,
     ],
 })
 export class AppModule {}
