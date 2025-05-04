@@ -16,7 +16,7 @@ interface SuppReqsCreationAttrs {
 @Table({tableName: 'supp_requests',})
 export class SuppReqs extends Model<SuppReqs, SuppReqsCreationAttrs> {
     @Column({type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true})
-    id_sup_req: number;
+    id_req: number;
 
     @ForeignKey(() => User)
     @Column({type: DataType.INTEGER, allowNull:false})

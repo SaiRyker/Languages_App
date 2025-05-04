@@ -1,33 +1,35 @@
-import {BelongsToMany, Column, DataType, Model, Table} from "sequelize-typescript";
+import {BelongsTo, BelongsToMany, Column, DataType, ForeignKey, Model, Table} from "sequelize-typescript";
 import {Role} from "../roles/roles.model";
 import {UserRoles} from "../roles/user-roles.model";
+import {SuppReqs} from "../supp_reqs/supp_reqs.model";
+import {User} from "../users/user.model";
 
-interface UserCreationAttrs {
-    user_login: string;
-    user_email: string;
-    user_password: string;
+interface RespCreationAttrs {
+    req_id: number;
+    responder_id: number;
+    content: string;
 }
 
-@Table({tableName: 'users'})
-export class User extends Model<User, UserCreationAttrs> {
+@Table({tableName: 'supp_responses', updatedAt: false})
+export class SuppResps extends Model<SuppResps, RespCreationAttrs> {
+
     @Column({type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true})
-    id_user: number;
+    id_resp: number;
 
-    @Column({type: DataType.STRING, unique: true, allowNull:false})
-    user_login: string;
+    @ForeignKey(() => SuppReqs)
+    @Column({type: DataType.INTEGER, allowNull:false})
+    req_id: string;
 
-    @Column({type: DataType.STRING, unique: true, allowNull:false})
-    user_email: string;
+    @BelongsTo(() => SuppReqs)
+    request: SuppReqs
+
+    @ForeignKey(() => User)
+    @Column({type: DataType.INTEGER, allowNull:false})
+    responder_id: User;
+
+    @BelongsTo(() => User)
+    user: User
 
     @Column({type: DataType.STRING, allowNull:false})
-    user_password: string;
-
-    @Column({type: DataType.DATE, allowNull:true})
-    registration_date: Date;
-
-    @Column({type: DataType.STRING, allowNull:true})
-    user_fio: string;
-
-    @BelongsToMany(() => Role, () => UserRoles)
-    roles: Role[];
+    content: string;
 }

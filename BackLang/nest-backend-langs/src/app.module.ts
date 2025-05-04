@@ -13,6 +13,7 @@ import {Notification} from "./user_notifications/user_notifications.model";
 import { SuppReqsModule } from './supp_reqs/supp_reqs.module';
 import { SuppRespsModule } from './supp_resps/supp_resps.module';
 import {SuppReqs} from "./supp_reqs/supp_reqs.model";
+import {SuppResps} from "./supp_resps/supp_resps.model";
 
 @Module({
     controllers: [],
@@ -28,7 +29,7 @@ import {SuppReqs} from "./supp_reqs/supp_reqs.model";
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [User, Role, UserRoles, Notification, SuppReqs],
+            models: [User, Role, UserRoles, Notification, SuppReqs, SuppResps],
             autoLoadModels: true,
         }),
         UsersModule,

@@ -20,7 +20,7 @@ export class SuppReqsService {
                 model: User,
                 attributes: {exclude: ['user_login', 'user_password', 'user_email']}
             }],
-            order: [['id_sup_req', 'DESC']]
+            order: [['id_req', 'DESC']]
         });
         return reqs;
     }
