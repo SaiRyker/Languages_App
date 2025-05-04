@@ -8,6 +8,10 @@ import { RolesModule } from './roles/roles.module';
 import {Role} from "./roles/roles.model";
 import {UserRoles} from "./roles/user-roles.model";
 import { AuthModule } from './auth/auth.module';
+import { CoursesModule } from './courses/courses.module';
+import { CourseModulesModule } from './course_modules/course_modules.module';
+import { LessonsModule } from './lessons/lessons.module';
+import { LessonMaterialsModule } from './lesson_materials/lesson_materials.module';
 
 @Module({
     controllers: [],
@@ -29,6 +33,10 @@ import { AuthModule } from './auth/auth.module';
         UsersModule,
         RolesModule,
         AuthModule,
+        CoursesModule,
+        CourseModulesModule,
+        LessonsModule,
+        LessonMaterialsModule,
     ],
 })
 export class AppModule {}
