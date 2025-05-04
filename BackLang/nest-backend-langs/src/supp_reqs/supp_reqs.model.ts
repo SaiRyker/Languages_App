@@ -7,12 +7,13 @@ export enum SupportRequestStatus {
 }
 
 interface SuppReqsCreationAttrs {
+    user_id: number;
     subject: string;
     description: string;
     status?: string;
 }
 
-@Table({tableName: 'users',})
+@Table({tableName: 'supp_requests',})
 export class SuppReqs extends Model<SuppReqs, SuppReqsCreationAttrs> {
     @Column({type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true})
     id_sup_req: number;
@@ -30,8 +31,7 @@ export class SuppReqs extends Model<SuppReqs, SuppReqsCreationAttrs> {
     @Column({type: DataType.TEXT, allowNull:false})
     description: string;
 
-    @Column({type: DataType.ENUM(SupportRequestStatus.PENDING, SupportRequestStatus.RESOLVED), allowNull:false,
+    @Column({type: DataType.ENUM(...Object.values(SupportRequestStatus)), allowNull:false,
     defaultValue: SupportRequestStatus.PENDING})
     status: SupportRequestStatus;
-
 }
