@@ -10,6 +10,9 @@ import {UserRoles} from "./roles/user-roles.model";
 import { AuthModule } from './auth/auth.module';
 import { UserNotificationsModule } from './user_notifications/user_notifications.module';
 import {Notification} from "./user_notifications/user_notifications.model";
+import { SuppReqsModule } from './supp_reqs/supp_reqs.module';
+import { SuppRespsModule } from './supp_resps/supp_resps.module';
+import {SuppReqs} from "./supp_reqs/supp_reqs.model";
 
 @Module({
     controllers: [],
@@ -25,13 +28,15 @@ import {Notification} from "./user_notifications/user_notifications.model";
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [User, Role, UserRoles, Notification],
+            models: [User, Role, UserRoles, Notification, SuppReqs],
             autoLoadModels: true,
         }),
         UsersModule,
         RolesModule,
         AuthModule,
         UserNotificationsModule,
+        SuppReqsModule,
+        SuppRespsModule,
     ],
 })
 export class AppModule {}
