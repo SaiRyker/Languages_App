@@ -8,11 +8,8 @@ import { RolesModule } from './roles/roles.module';
 import {Role} from "./roles/roles.model";
 import {UserRoles} from "./roles/user-roles.model";
 import { AuthModule } from './auth/auth.module';
-import { CoursesModule } from './courses/courses.module';
-import { CourseModulesModule } from './course_modules/course_modules.module';
-import { LessonsModule } from './lessons/lessons.module';
-import { LessonMaterialsModule } from './lesson_materials/lesson_materials.module';
 import { UserNotificationsModule } from './user_notifications/user_notifications.module';
+import {Notification} from "./user_notifications/user_notifications.model";
 
 @Module({
     controllers: [],
@@ -28,16 +25,12 @@ import { UserNotificationsModule } from './user_notifications/user_notifications
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [User, Role, UserRoles],
+            models: [User, Role, UserRoles, Notification],
             autoLoadModels: true,
         }),
         UsersModule,
         RolesModule,
         AuthModule,
-        CoursesModule,
-        CourseModulesModule,
-        LessonsModule,
-        LessonMaterialsModule,
         UserNotificationsModule,
     ],
 })

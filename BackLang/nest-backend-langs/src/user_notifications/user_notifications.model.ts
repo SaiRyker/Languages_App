@@ -1,6 +1,4 @@
 import {BelongsTo, BelongsToMany, Column, DataType, ForeignKey, Model, Table} from "sequelize-typescript";
-import {Role} from "../roles/roles.model";
-import {UserRoles} from "../roles/user-roles.model";
 import {User} from "../users/user.model";
 
 export enum NotificationStatus {
@@ -34,7 +32,7 @@ export class Notification extends Model<Notification, NotificationCreationAttrs>
     id_notification: number;
 
     @ForeignKey(() => User)
-    @Column({type: DataType.INTEGER, unique: true, allowNull:false})
+    @Column({type: DataType.INTEGER, allowNull:false})
     user_id: number;
 
     @BelongsTo(() => User)
