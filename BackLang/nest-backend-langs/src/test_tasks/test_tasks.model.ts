@@ -1,62 +1,46 @@
-import { Table, Column, Model, DataType, ForeignKey, BelongsTo, HasMany } from 'sequelize-typescript';
-import {Course} from "../courses/courses.model";
-import {User} from "../users/user.model";
-import {GroupStudent} from "./group-students.model";
+import {Table, Column, Model, DataType, ForeignKey, BelongsTo, HasMany} from 'sequelize-typescript';
+import {Lesson} from "../lessons/lessons.model";
+import {json} from "sequelize";
+import {TSolution} from "../test_solutions/test_solutions.model";
 
 
-export enum GroupStatus {
-    ACTIVE = 'active',
-    INACTIVE = 'inactive',
-    COMPLETED = 'completed'
+
+interface TestCreationAttrs {
+    lesson_id: number;
+    task_name: string;
+    description: string;
+    task_answer: any;
+    correct: any
 }
 
-@Table({ tableName: 'student_groups' })
-export class StudentGroup extends Model {
+@Table({ tableName: 'test_tasks' })
+export class TestTask extends Model<TestTask, TestCreationAttrs> {
     @Column({
         type: DataType.INTEGER,
         primaryKey: true,
         autoIncrement: true
     })
-    id_group: number;
+    id_t_task: number;
 
-    @ForeignKey(() => Course)
-    @Column({
-        type: DataType.INTEGER,
-        allowNull: false
-    })
-    course_id: number;
+    @ForeignKey(() => Lesson)
+    @Column({type: DataType.INTEGER, allowNull:false})
+    lesson_id: number;
 
-    @BelongsTo(() => Course)
-    course: Course;
+    @BelongsTo(() => Lesson)
+    lesson: Lesson;
 
-    @Column({
-        type: DataType.STRING(255),
-        allowNull: false
-    })
-    group_name: string;
+    @Column({type: DataType.STRING, allowNull:false})
+    task_name: string;
 
-    @Column({
-        type: DataType.DATE,
-        allowNull: true
-    })
-    end_date: Date | null;
+    @Column({type: DataType.TEXT, allowNull:false})
+    description: string;
 
-    @ForeignKey(() => User)
-    @Column({
-        type: DataType.INTEGER,
-        allowNull: false
-    })
-    curator_id: number;
+    @Column({type: DataType.JSONB, allowNull:false})
+    task_answers: any;
 
-    @BelongsTo(() => User)
-    curator: User;
+    @Column({type: DataType.JSONB, allowNull:false})
+    correct: any;
 
-    @Column({
-        type: DataType.ENUM(...Object.values(GroupStatus)),
-        defaultValue: GroupStatus.ACTIVE
-    })
-    status: GroupStatus;
-
-    @HasMany(() => GroupStudent)
-    groupStudents: GroupStudent[];
+    @HasMany(() => TSolution)
+    solutions: TSolution[];
 }

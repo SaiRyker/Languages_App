@@ -1,10 +1,12 @@
-import { Table, Column, Model, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import {Table, Column, Model, DataType, ForeignKey, BelongsTo, HasMany} from 'sequelize-typescript';
 import {Lesson} from "../lessons/lessons.model";
 import {json} from "sequelize";
+import {Language} from "../prog_langs/prog_langs.model";
+import {PrSolution} from "../pr_solutions/pr_solutions.model";
 
 
 
-interface TestCreationAttrs {
+interface PrCreationAttrs {
     lesson_id: number;
     task_name: string;
     description: string;
@@ -12,14 +14,14 @@ interface TestCreationAttrs {
     correct: any
 }
 
-@Table({ tableName: 'test_tasks' })
-export class TestTask extends Model<TestTask, TestCreationAttrs> {
+@Table({ tableName: 'pr_tasks' })
+export class PrTask extends Model<PrTask, PrCreationAttrs> {
     @Column({
         type: DataType.INTEGER,
         primaryKey: true,
         autoIncrement: true
     })
-    id_t_task: number;
+    id_pr_task: number;
 
     @ForeignKey(() => Lesson)
     @Column({type: DataType.INTEGER, allowNull:false})
@@ -31,13 +33,29 @@ export class TestTask extends Model<TestTask, TestCreationAttrs> {
     @Column({type: DataType.STRING, allowNull:false})
     task_name: string;
 
-    @Column({type: DataType.STRING, allowNull:false})
+    @ForeignKey(() => Language)
+    @Column({type: DataType.INTEGER, allowNull:false})
+    language_id: number;
+
+    @BelongsTo(() => Language)
+    language: Language;
+
+    @Column({type: DataType.TEXT, allowNull:false})
     description: string;
 
-    @Column({type: DataType.JSONB, allowNull:false})
-    task_answers: any;
+    @Column({type: DataType.TEXT, allowNull:false})
+    test_cases: string;
 
-    @Column({type: DataType.JSONB, allowNull:false})
-    correct: any;
+    @Column({type: DataType.INTEGER, allowNull:false})
+    time_limit: number;
+
+    @Column({type: DataType.INTEGER, allowNull:false})
+    memory_limit: number;
+
+    @Column({type: DataType.ARRAY(DataType.STRING(30)), allowNull:true, defaultValue: []})
+    task_tags: string;
+
+    @HasMany(() => PrSolution)
+    solutions: PrSolution[];
 
 }

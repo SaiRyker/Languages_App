@@ -3,6 +3,9 @@ import {Role} from "../roles/roles.model";
 import {UserRoles} from "../roles/user-roles.model";
 import {SuppReqs} from "../supp_reqs/supp_reqs.model";
 import {Notification} from "../user_notifications/user_notifications.model";
+import {SuppResps} from "../supp_resps/supp_resps.model";
+import {StudentGroup} from "../student_groups/student_groups.model";
+import {GroupStudent} from "../student_groups/group-students.model";
 
 interface UserCreationAttrs {
     user_login: string;
@@ -36,6 +39,15 @@ export class User extends Model<User, UserCreationAttrs> {
     @HasMany(() => SuppReqs, 'user_id')
     supportRequests: SuppReqs[];
 
+    @HasMany(() => SuppResps, 'responder_id')
+    supportResponses: SuppResps[];
+
     @HasMany(() => Notification, 'user_id')
     notifications: Notification[];
+
+    @HasMany(() => StudentGroup, 'curator_id')
+    curatedGroups: StudentGroup[];
+
+    @BelongsToMany(() => StudentGroup, () => GroupStudent)
+    groups: StudentGroup[];
 }

@@ -1,50 +1,46 @@
 import {BelongsTo, BelongsToMany, Column, DataType, ForeignKey, Model, Table} from "sequelize-typescript";
 import {User} from "../users/user.model";
+import {Course} from "../courses/courses.model";
 
-export enum NotificationStatus {
-    UNREAD = 'unread',
-    READ = 'read'
+export enum ProgressStatus {
+    uncompleted = 'Не начат',
+    completed = 'Завершен',
+    procession = 'В процессе'
+
 }
 
-interface NotificationCreationAttrs {
-    user_id: number;
-    content: string;
+interface ProgressCreationAttrs {
+    student_id: number;
+    course_id: number;
 }
 
 @Table({
-    tableName: 'user_notifications',
-    timestamps: false,
-    hooks: {
-        beforeCreate: (user_notifications: Notification) => {
-            if (!user_notifications.sent_date) {
-                user_notifications.sent_date = new Date();
-            }
-
-            if(!user_notifications.status){
-                user_notifications.status = NotificationStatus.UNREAD;
-            }
-        }
-    }
-
+    tableName: 'user_progress',
 })
-export class Notification extends Model<Notification, NotificationCreationAttrs> {
+export class Progress extends Model<Progress, ProgressCreationAttrs> {
     @Column({type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true})
-    id_notification: number;
+    id_progress: number;
 
     @ForeignKey(() => User)
     @Column({type: DataType.INTEGER, allowNull:false})
-    user_id: number;
+    student_id: number;
 
     @BelongsTo(() => User)
     user: User
 
-    @Column({type: DataType.TEXT, allowNull:false})
-    content: string;
+    @ForeignKey(() => Course)
+    @Column({type: DataType.INTEGER, allowNull:false})
+    course_id: number;
 
-    @Column({type: DataType.DATE, allowNull:false, defaultValue:DataType.NOW})
-    sent_date: Date;
+    @BelongsTo(() => Course)
+    course: Course
 
-    @Column({type: DataType.ENUM(NotificationStatus.UNREAD, NotificationStatus.READ), allowNull:false,
-        defaultValue: NotificationStatus.UNREAD})
-    status: NotificationStatus;
+    @Column({type: DataType.ENUM(...Object.values(ProgressStatus)), allowNull:false, defaultValue: ProgressStatus.uncompleted})
+    status: ProgressStatus;
+
+    @Column({type: DataType.DATE, allowNull:true, defaultValue:null})
+    completion_date: Date;
+
+    @Column({type: DataType.INTEGER, allowNull:false, defaultValue:0})
+    completion_percent: number;
 }

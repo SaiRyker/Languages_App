@@ -3,34 +3,35 @@ import {Lesson} from "../lessons/lessons.model";
 import {json} from "sequelize";
 import {TestTask} from "../test_tasks/test_tasks.model";
 import {User} from "../users/user.model";
+import {PrTask} from "../pr_tasks/pr_tasks.model";
 
-export enum TSolStatus {
+export enum PrSolStatus {
     uncompleted = 'Неудачно',
     completed = 'Завершено'
 }
 
-interface TSolCreationAttrs {
+interface PrSolCreationAttrs {
     test_task_id: number;
     student_id: number;
     answer: any;
-    status?: TSolStatus;
+    status?: PrSolStatus;
 }
 
-@Table({ tableName: 'test_solutions' })
-export class TSolution extends Model<TSolution, TSolCreationAttrs> {
+@Table({ tableName: 'pr_solutions' })
+export class PrSolution extends Model<PrSolution, PrSolCreationAttrs> {
     @Column({
         type: DataType.INTEGER,
         primaryKey: true,
         autoIncrement: true
     })
-    id_t_sol: number;
+    id_pr_sol: number;
 
-    @ForeignKey(() => TestTask)
+    @ForeignKey(() => PrTask)
     @Column({type: DataType.INTEGER, allowNull:false})
-    test_task_id: number;
+    pr_task_id: number;
 
-    @BelongsTo(() => TestTask)
-    test_task: TestTask;
+    @BelongsTo(() => PrTask)
+    pr_task: PrTask;
 
     @ForeignKey(() => User)
     @Column({type: DataType.INTEGER, allowNull:false})
@@ -39,13 +40,12 @@ export class TSolution extends Model<TSolution, TSolCreationAttrs> {
     @BelongsTo(() => User)
     user: User;
 
-    @Column({type: DataType.JSONB, allowNull:false})
-    answer: any;
+    @Column({type: DataType.TEXT, allowNull:false})
+    solution: string;
 
-    @Column({type: DataType.ENUM(...Object.values(TSolStatus)), allowNull:false, defaultValue: TSolStatus.uncompleted})
-    status: TSolStatus;
+    @Column({type: DataType.ENUM(...Object.values(PrSolStatus)), allowNull:false, defaultValue: PrSolStatus.uncompleted})
+    status: PrSolStatus;
 
     @Column({type: DataType.INTEGER, allowNull:false})
     score: number;
-
 }

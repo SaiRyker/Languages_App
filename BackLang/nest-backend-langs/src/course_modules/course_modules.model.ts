@@ -1,42 +1,32 @@
-import {BelongsTo, BelongsToMany, Column, DataType, ForeignKey, HasMany, Model, Table} from "sequelize-typescript";
-import {Role} from "../roles/roles.model";
-import {UserRoles} from "../roles/user-roles.model";
-import {SuppReqs} from "../supp_reqs/supp_reqs.model";
-import {Notification} from "../user_notifications/user_notifications.model";
-import {SuppResps} from "../supp_resps/supp_resps.model";
-import {Language} from "../prog_langs/prog_langs.model";
+import {BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table} from "sequelize-typescript";
+import {Course} from "../courses/courses.model";
+import {Lesson} from "../lessons/lessons.model";
 
-export enum DiffLevel {
-    beginning = 'Начальный',
-    intermediate = 'Средний',
-    professional = 'Продвинутый'
+
+interface ModuleCreationAttrs {
+    course_id: number;
+    module_name: string;
+    order_number: number;
 }
 
-interface CourseCreationAttrs {
-    language_id: number;
-    course_name: string;
-    description: string;
-    diff_level?: string;
-}
-
-@Table({tableName: 'courses'})
-export class Course extends Model<Course, CourseCreationAttrs> {
+@Table({tableName: 'course_modules'})
+export class CModule extends Model<CModule, ModuleCreationAttrs> {
     @Column({type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true})
-    id_course: number;
+    id_module: number;
 
-    @Column({type: DataType.STRING, unique: true, allowNull:false})
-    course_name: string;
-
-    @Column({type: DataType.ENUM(...Object.values(DiffLevel)), allowNull:false, defaultValue: DiffLevel.intermediate})
-    diff_level: DiffLevel;
-
-    @ForeignKey(() => Language)
+    @ForeignKey(() => Course)
     @Column({type: DataType.INTEGER, allowNull:false})
-    lang_id: number;
+    course_id: number;
 
-    @BelongsTo(() => Language)
-    language: Language;
+    @BelongsTo(() => Course)
+    course: Course
 
-    @Column({type: DataType.STRING, allowNull:true})
-    description: string;
+    @Column({type: DataType.STRING, allowNull:false})
+    module_name: string;
+
+    @Column({type: DataType.INTEGER, allowNull:false})
+    order_number: number;
+
+    @HasMany(() => Lesson)
+    lessons: Lesson[];
 }

@@ -1,33 +1,39 @@
 import {BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table} from "sequelize-typescript";
 import {Course} from "../courses/courses.model";
 import {CModule} from "../course_modules/course_modules.model";
+import {Lesson} from "../lessons/lessons.model";
 
-
-interface LessonCreationAttrs {
-    module_id: number;
-    lesson_name: string;
-    order_number: number;
-    description?: string;
+export enum mType {
+    pText = 'Текст',
+    pAudio = 'Аудио',
+    pVideo = 'Видео'
 }
 
-@Table({tableName: 'lessons'})
-export class Lesson extends Model<Lesson, LessonCreationAttrs> {
+interface MaterialCreationAttrs {
+    lesson_id: number;
+    material_type: mType;
+    content?: string;
+    url?: string;
+}
+
+@Table({tableName: 'lesson_materials'})
+export class Material extends Model<Material, MaterialCreationAttrs> {
     @Column({type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true})
-    id_lesson: number;
+    id_material: number;
 
-    @ForeignKey(() => CModule)
+    @ForeignKey(() => Lesson)
     @Column({type: DataType.INTEGER, allowNull:false})
-    module_id: number;
+    lesson_id: number;
 
-    @BelongsTo(() => CModule)
-    module: CModule
+    @BelongsTo(() => Lesson)
+    lesson: Lesson
 
-    @Column({type: DataType.STRING, allowNull:false})
-    lesson_name: string;
+    @Column({type: DataType.ENUM(...Object.values(mType)), allowNull:false, defaultValue: mType.pText})
+    material_type: mType;
 
-    @Column({type: DataType.INTEGER, allowNull:false})
-    order_number: number;
+    @Column({type: DataType.TEXT, allowNull:true})
+    content: string;
 
-    @Column({type: DataType.STRING, allowNull:false})
-    description: string;
+    @Column({type: DataType.STRING, allowNull:true})
+    url: string;
 }

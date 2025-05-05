@@ -8,12 +8,13 @@ import {UserRoles} from "../roles/user-roles.model";
 import {RolesModule} from "../roles/roles.module";
 import {AuthModule} from "../auth/auth.module";
 import {SuppReqs} from "../supp_reqs/supp_reqs.model";
+import {SuppResps} from "../supp_resps/supp_resps.model";
 
 @Module({
   controllers: [UsersController],
   providers: [UsersService],
   imports: [
-      SequelizeModule.forFeature([User, Role, UserRoles, SuppReqs]),
+      SequelizeModule.forFeature([User, Role, UserRoles, SuppReqs, SuppResps]),
       RolesModule,
       forwardRef(() => AuthModule),
   ],

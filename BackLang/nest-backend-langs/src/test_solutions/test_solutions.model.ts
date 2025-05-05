@@ -1,41 +1,51 @@
 import { Table, Column, Model, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
 import {Lesson} from "../lessons/lessons.model";
 import {json} from "sequelize";
+import {TestTask} from "../test_tasks/test_tasks.model";
+import {User} from "../users/user.model";
 
-interface TestCreationAttrs {
-    lesson_id: number;
-    task_name: string;
-    description: string;
-    task_answer: json;
-    correct: json
+export enum TSolStatus {
+    uncompleted = 'Неудачно',
+    completed = 'Завершено'
 }
 
-@Table({ tableName: 'test_tasks' })
-export class TestTask extends Model<TestTask, TestCreationAttrs> {
+interface TSolCreationAttrs {
+    test_task_id: number;
+    student_id: number;
+    answer: any;
+    status?: TSolStatus;
+}
+
+@Table({ tableName: 'test_solutions' })
+export class TSolution extends Model<TSolution, TSolCreationAttrs> {
     @Column({
         type: DataType.INTEGER,
         primaryKey: true,
         autoIncrement: true
     })
-    id_t_task: number;
+    id_t_sol: number;
 
-    @ForeignKey(() => Lesson)
+    @ForeignKey(() => TestTask)
     @Column({type: DataType.INTEGER, allowNull:false})
-    lesson_id: number;
+    test_task_id: number;
 
-    @BelongsTo(() => Lesson)
-    lesson: Lesson;
+    @BelongsTo(() => TestTask)
+    test_task: TestTask;
 
-    @Column({type: DataType.STRING, allowNull:false})
-    task_name: string;
+    @ForeignKey(() => User)
+    @Column({type: DataType.INTEGER, allowNull:false})
+    student_id: number;
 
-    @Column({type: DataType.STRING, allowNull:false})
-    description: string;
-
-    @Column({type: DataType.JSONB, allowNull:false})
-    task_answers: json;
+    @BelongsTo(() => User)
+    user: User;
 
     @Column({type: DataType.JSONB, allowNull:false})
-    correct: json;
+    answer: any;
+
+    @Column({type: DataType.ENUM(...Object.values(TSolStatus)), allowNull:false, defaultValue: TSolStatus.uncompleted})
+    status: TSolStatus;
+
+    @Column({type: DataType.INTEGER, allowNull:false})
+    score: number;
 
 }

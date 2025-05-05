@@ -1,37 +1,61 @@
-import {BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table} from "sequelize-typescript";
+import {Table, Column, Model, DataType, ForeignKey, BelongsTo, HasMany, BelongsToMany} from 'sequelize-typescript';
 import {Course} from "../courses/courses.model";
-import {CModule} from "../course_modules/course_modules.model";
-import {Material} from "../lesson_materials/lesson_materials.model";
+import {User} from "../users/user.model";
+import {GroupStudent} from "./group-students.model";
+import {GroupCourse} from "./group-courses.model";
 
 
-interface LessonCreationAttrs {
-    module_id: number;
-    lesson_name: string;
-    order_number: number;
-    description?: string;
+export enum GroupStatus {
+    ACTIVE = 'active',
+    INACTIVE = 'inactive',
+    COMPLETED = 'completed'
 }
 
-@Table({tableName: 'lessons'})
-export class Lesson extends Model<Lesson, LessonCreationAttrs> {
-    @Column({type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true})
-    id_lesson: number;
+interface GroupCreationAttrs {
+    group_name: string;
+    curator_id: number;
+}
 
-    @ForeignKey(() => CModule)
-    @Column({type: DataType.INTEGER, allowNull:false})
-    module_id: number;
+@Table({ tableName: 'student_groups' })
+export class StudentGroup extends Model<StudentGroup, GroupCreationAttrs> {
+    @Column({
+        type: DataType.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    })
+    id_group: number;
 
-    @BelongsTo(() => CModule)
-    module: CModule
+    @Column({
+        type: DataType.STRING(255),
+        allowNull: false
+    })
+    group_name: string;
 
-    @Column({type: DataType.STRING, allowNull:false})
-    lesson_name: string;
+    @Column({
+        type: DataType.DATE,
+        allowNull: true
+    })
+    end_date: Date | null;
 
-    @Column({type: DataType.INTEGER, allowNull:false})
-    order_number: number;
+    @ForeignKey(() => User)
+    @Column({
+        type: DataType.INTEGER,
+        allowNull: false
+    })
+    curator_id: number;
 
-    @Column({type: DataType.STRING, allowNull:false})
-    description: string;
+    @BelongsTo(() => User)
+    curator: User;
 
-    @HasMany(() => Material)
-    materials: Material[];
+    @Column({
+        type: DataType.ENUM(...Object.values(GroupStatus)),
+        defaultValue: GroupStatus.ACTIVE, allowNull: false
+    })
+    status: GroupStatus;
+
+    @BelongsToMany(() => User, () => GroupStudent)
+    students: User[];
+
+    @BelongsToMany(() => Course, () => GroupCourse)
+    courses: Course[];
 }
