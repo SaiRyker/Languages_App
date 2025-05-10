@@ -135,4 +135,15 @@ export class StudentGroupsService {
         const courses = group.get("courses")
         return courses;
     }
+
+    async getGroupsByUserId(student_id: number) {
+        const groups = await this.studGroupRep.findAll({
+            where: { student_id: student_id },
+            include: [{
+                model: StudentGroup,
+                include: [{ model: User, as: 'curator'}],
+            }]
+        })
+        return groups.map((gs) => gs.get("group"))
+    }
 }

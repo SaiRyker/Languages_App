@@ -5,12 +5,15 @@ import {CreateUserDto} from "./dto/create-user.dto";
 import {RolesService} from "../roles/roles.service";
 import {Role} from "../roles/roles.model";
 import {addRoleDto} from "../roles/dto/add-role.dto";
+import {StudentGroupsService} from "../student_groups/student_groups.service";
+import {Course} from "../courses/courses.model";
 
 @Injectable()
 export class UsersService {
 
     constructor(@InjectModel(User) private userRepository: typeof User,
-                private roleService: RolesService) {}
+                private roleService: RolesService,
+                private studentGroupsService: StudentGroupsService,) {}
 
     async createUser(dto: CreateUserDto) {
         const user = await this.userRepository.create(dto);
@@ -20,19 +23,6 @@ export class UsersService {
         console.log(user)
         return user;
     }
-
-    // async createUser(dto: CreateUserDto) {
-    //     const user = await this.userRepository.create(dto);
-    //     const role = await this.roleService.getRoleByValue("user")
-    //     console.log(role.id_role)
-    //     console.log(role.id_role)
-    //     if (!role) {
-    //         throw new Error("Role 'user' not found");
-    //     }
-    //     await user.$add('roles', [role.id_role])
-    //     user.roles = [role];
-    //     return user;
-    // }
 
     async getAllUser() {
         const users = await this.userRepository.findAll({include: {all: true}});
@@ -62,12 +52,18 @@ export class UsersService {
         throw new HttpException('Role already exists', HttpStatus.NOT_FOUND);
     }
 
-    // async getUserById(id: number) {
-    //     return this.userRepository.findByPk(id, {
-    //         include: [{
-    //             model: Role,
-    //             through: { attributes: [] } // Исключаем данные промежуточной таблицы
-    //         }]
-    //     });
-    // }
+    async getUserCourses(user_id: number): Promise<Course[]> {
+        console.log('Fetching groups for userId:', user_id);
+        const groups = await this.studentGroupsService.getGroupsByUserId(user_id);
+        console.log('Groups found:', groups);
+        if (!groups || groups.length === 0) {
+            return [];
+        }
+
+        const groupIds = groups.map((group) => group.get("id_group"));
+        console.log('Fetching courses for groupId:', groupIds[0]);
+        const courses = await this.studentGroupsService.getGroupCourses(groupIds[0]);
+        console.log('Courses found:', courses);
+        return courses;
+    }
 }

@@ -7,6 +7,7 @@ import {addStudentsDto} from "./dto/add-students.dto";
 import {addCourseDto} from "./dto/add-course.dto";
 import {Course} from "../courses/courses.model";
 import {User} from "../users/user.model";
+import {GroupStudent} from "./group-students.model";
 
 @Controller('groups')
 export class StudentGroupsController {
@@ -36,5 +37,10 @@ export class StudentGroupsController {
     @Get('/:group_id/courses')
     async getGroupCourses(@Param('group_id') group_id: number): Promise<Course[]> {
         return this.studentGroupsService.getGroupCourses(group_id)
+    }
+
+    @Get('/userGroup/:student_id')
+    async getUserGroup(@Param('student_id') student_id: number){
+        return this.studentGroupsService.getGroupsByUserId(student_id)
     }
 }

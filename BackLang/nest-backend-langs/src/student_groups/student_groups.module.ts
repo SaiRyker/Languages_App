@@ -21,7 +21,7 @@ import {UserProgressModule} from "../user_progress/user_progress.module";
       Course,
         GroupCourse,
     ]),
-    UserProgressModule
+    UserProgressModule,
   ],
   exports: [StudentGroupsService]
 })

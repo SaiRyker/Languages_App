@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Post, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, Post, Req, UseGuards} from '@nestjs/common';
 import {CreateUserDto} from "./dto/create-user.dto";
 import {UsersService} from "./users.service";
 import {ApiOperation, ApiResponse} from "@nestjs/swagger";
@@ -7,11 +7,17 @@ import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 import {Roles} from "../auth/roles-auth.decorator";
 import {RolesGuard} from "../auth/roles.guard";
 import {addRoleDto} from "../roles/dto/add-role.dto";
+import {Request} from "express";
+import {GetUser} from "../common/decorators/user.decorator";
+import {StudentGroup} from "../student_groups/student_groups.model";
+import {StudentGroupsService} from "../student_groups/student_groups.service";
+import {Course} from "../courses/courses.model";
 
 @Controller('users')
 export class UsersController {
 
-    constructor(private usersService: UsersService) {}
+    constructor(private usersService: UsersService,
+                private studentGroupsService: StudentGroupsService,) {}
 
 
     @ApiOperation({ summary: 'Создание пользователя' })
@@ -40,4 +46,27 @@ export class UsersController {
     addRole(@Body() dto: addRoleDto) {
         return this.usersService.addRole(dto);
     }
+
+    @ApiOperation({ summary: 'Получение профиля текущего пользователя' })
+    @ApiResponse({ status: 200, type: User })
+    @UseGuards(JwtAuthGuard)
+    @Get('profile')
+    getProfile(@GetUser() user: any) {
+        if (!user || !user.email) {
+            throw new Error('User data not found');
+        }
+        return this.usersService.getUserByEmail(user.email);
+    }
+
+    @ApiOperation({ summary: 'Получение курсов текущего пользователя' })
+    @ApiResponse({ status: 200, type: [Course] })
+    @UseGuards(JwtAuthGuard)
+    @Get('profile/courses')
+    async getUserCourses(@GetUser() user: any) {
+        if (!user || !user.id) {
+            throw new Error('User data not found');
+        }
+        return this.usersService.getUserCourses(user.id);
+    }
+
 }
