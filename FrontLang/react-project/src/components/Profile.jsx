@@ -4,7 +4,7 @@ import {getUserGroup, getUserProfile} from "../api/userApi.js";
 
 function Profile() {
     const [user, setUser] = useState(null);
-    // const [group, setGroup] = useState(null);
+     const [groups, setGroup] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -18,12 +18,10 @@ function Profile() {
 
         const fetchProfile = async () => {
             try {
-                const [profileData, groupData] = await Promise.all([
-                    getUserProfile(),
-                    // getUserGroup(),
-                ])
+                const profileData = await getUserProfile();
+                const groupsData = await getUserGroup();
                 setUser(profileData);
-                // setGroup(groupData);
+                setGroup(groupsData);
                 setLoading(false);
             } catch (err) {
                 setError('Failed to load profile');
@@ -51,6 +49,20 @@ function Profile() {
                 <p>Login: {user.user_login}</p>
                 <p>Email: {user.user_email}</p>
                 <p>Roles: {roles.join(', ') || 'No roles'}</p>
+                {
+                    groups.length > 0 && (
+                        <div>
+                            <h3>Groups:</h3>
+                            <ul>
+                                {
+                                    groups.map((group, index) => (
+                                        <li key={index}>{group.group_name} (Status: {group.status})</li>
+                                    ))
+                                }
+                            </ul>
+                        </div>
+                    )
+                }
                 <button onClick={() => {navigate('/courses');}}>Мои курсы</button>
                 <button onClick={() => {localStorage.removeItem('token'); navigate('/login');}}>Выйти</button>
             </div>

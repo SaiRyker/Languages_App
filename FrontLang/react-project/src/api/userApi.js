@@ -19,7 +19,7 @@ export const getUserProfile = async () => {
 
 export const getUserGroup = async () => {
     const apiClient = createApiClient();
-    const response = await apiClient.get('/users/profile/group');
+    const response = await apiClient.get('/users/profile/groups');
     return response.data;
 };
 

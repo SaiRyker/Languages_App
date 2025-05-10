@@ -69,4 +69,16 @@ export class UsersController {
         return this.usersService.getUserCourses(user.id);
     }
 
+    @ApiOperation({ summary: 'Получение групп текущего пользователя' })
+    @ApiResponse({ status: 200, type: [StudentGroup] })
+    @UseGuards(JwtAuthGuard)
+    @Get('profile/groups')
+    async getUserGroups(@GetUser() user: any) {
+        console.log('User in getUserGroups:', user);
+        if (!user || !user.id) {
+            throw new Error('User data not found');
+        }
+        return this.usersService.getUserGroups(user.id);
+    }
+
 }

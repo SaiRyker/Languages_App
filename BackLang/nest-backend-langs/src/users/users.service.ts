@@ -7,6 +7,7 @@ import {Role} from "../roles/roles.model";
 import {addRoleDto} from "../roles/dto/add-role.dto";
 import {StudentGroupsService} from "../student_groups/student_groups.service";
 import {Course} from "../courses/courses.model";
+import {StudentGroup} from "../student_groups/student_groups.model";
 
 @Injectable()
 export class UsersService {
@@ -65,5 +66,9 @@ export class UsersService {
         const courses = await this.studentGroupsService.getGroupCourses(groupIds[0]);
         console.log('Courses found:', courses);
         return courses;
+    }
+
+    async getUserGroups(user_id: number): Promise<StudentGroup[]> {
+        return this.studentGroupsService.getGroupsByUserId(user_id);
     }
 }
