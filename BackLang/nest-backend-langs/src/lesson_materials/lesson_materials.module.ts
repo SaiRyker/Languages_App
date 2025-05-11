@@ -12,5 +12,8 @@ import {Material} from "./lesson_materials.model";
   imports: [
     SequelizeModule.forFeature([Material, Lesson])
   ],
+  exports: [
+    LessonMaterialsService
+  ]
 })
 export class LessonMaterialsModule {}

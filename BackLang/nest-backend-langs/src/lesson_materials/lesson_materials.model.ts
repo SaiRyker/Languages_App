@@ -1,6 +1,4 @@
 import {BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table} from "sequelize-typescript";
-import {Course} from "../courses/courses.model";
-import {CModule} from "../course_modules/course_modules.model";
 import {Lesson} from "../lessons/lessons.model";
 
 export enum mType {
@@ -12,7 +10,7 @@ export enum mType {
 interface MaterialCreationAttrs {
     lesson_id: number;
     material_type: mType;
-    content?: string;
+    content: string;
     url?: string;
 }
 

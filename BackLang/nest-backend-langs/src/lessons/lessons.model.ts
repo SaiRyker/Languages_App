@@ -6,10 +6,17 @@ import {TestTask} from "../test_tasks/test_tasks.model";
 import {PrTask} from "../pr_tasks/pr_tasks.model";
 
 
+export enum LessonType {
+    THEORY = 'теория',
+    TEST = 'тест',
+    PRACTICAL = 'практика',
+}
+
 interface LessonCreationAttrs {
     module_id: number;
     lesson_name: string;
     order_number: number;
+    lesson_type: LessonType;
     description?: string;
 }
 
@@ -42,6 +49,13 @@ export class Lesson extends Model<Lesson, LessonCreationAttrs> {
 
     @Column({type: DataType.STRING, allowNull:false})
     description: string;
+
+    @Column({
+        type: DataType.ENUM(...Object.values(LessonType)),
+        allowNull: false,
+        defaultValue: LessonType.THEORY,
+    })
+    lesson_type: LessonType;
 
     @HasMany(() => Material)
     materials: Material[];

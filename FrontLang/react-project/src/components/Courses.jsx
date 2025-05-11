@@ -45,6 +45,7 @@ function Courses() {
         }
     };
 
+
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
     if (!courses || courses.length === 0) return <div>No courses available</div>;

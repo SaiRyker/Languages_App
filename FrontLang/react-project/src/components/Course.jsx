@@ -76,6 +76,10 @@ function Course() {
         return acc;
     }, {});
 
+    const handleLessonClick = (lessonId) => {
+        navigate(`/lesson/${lessonId}`);
+    };
+
     return (
         <div>
             <h2>{course.course_name}</h2>
@@ -91,9 +95,19 @@ function Course() {
                                     <ul>
                                         {lessonsByModule[module.id_module].map((lesson, lessonIndex) => (
                                             <li key={lessonIndex}>
-                                                {lesson.lesson_name} (Order: {lesson.order_number}, Description: {lesson.description || 'N/A'})
+                                                <span
+                                                    style={{
+                                                        cursor: 'pointer',
+                                                        color: 'blue',
+                                                        textDecoration: 'underline'
+                                                    }}
+                                                    onClick={() => handleLessonClick(lesson.id_lesson)}
+                                                >
+                                                {lesson.lesson_name}
+                                                    </span>{' '}
+                                                    (Order: {lesson.order_number}, Description: {lesson.description || 'N/A'})
                                             </li>
-                                        ))}
+                                            ))}
                                     </ul>
                                 ) : (
                                     <p>No lessons available</p>

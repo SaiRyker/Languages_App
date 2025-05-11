@@ -1,4 +1,5 @@
-import {IsNotEmpty, IsNumber, IsString, MinLength} from "class-validator";
+import {IsEnum, IsNotEmpty, IsNumber, IsString, MinLength} from "class-validator";
+import {LessonType} from "../lessons.model";
 
 
 export class CreateLessonDto {
@@ -14,6 +15,9 @@ export class CreateLessonDto {
     @IsNumber()
     @IsNotEmpty()
     order_number: number;
+
+    @IsEnum(LessonType)
+    lesson_type: LessonType;
 
     @IsString()
     description?: string;

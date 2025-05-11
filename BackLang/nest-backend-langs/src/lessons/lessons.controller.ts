@@ -28,4 +28,11 @@ export class LessonsController {
     async getLessonsByModuleId(@Param('module_id') module_id: number): Promise<Lesson[]> {
         return this.lessonService.getLessonsByModuleId(module_id);
     }
+
+    @ApiOperation({ summary: 'Получение урока по его ID' })
+    @ApiResponse({ status: 200, type: [Lesson] })
+    @Get('/:lesson_id')
+    async getLessonById(@Param('lesson_id') lesson_id: number): Promise<Lesson> {
+        return this.lessonService.getLessonById(lesson_id);
+    }
 }

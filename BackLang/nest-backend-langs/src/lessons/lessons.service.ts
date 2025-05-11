@@ -1,8 +1,9 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from "@nestjs/sequelize";
-import {Lesson} from "./lessons.model";
+import {Lesson, LessonType} from "./lessons.model";
 import {CModule} from "../course_modules/course_modules.model";
 import {CreateLessonDto} from "./dto/create-lesson.dto";
+import {Course} from "../courses/courses.model";
 
 @Injectable()
 export class LessonsService {
@@ -15,6 +16,8 @@ export class LessonsService {
             throw new NotFoundException(`Module with id ${dto.module_id} not found`);
         }
 
+        // Установка типа урока по умолчанию или из DTO (если предоставлен)
+        const lessonType = dto.lesson_type || LessonType.THEORY;
         const lesson = await this.lessonRep.create(dto);
         return lesson;
     }
@@ -48,6 +51,20 @@ export class LessonsService {
         })
 
         return lessons;
+    }
+
+    async getLessonById(lesson_id: number): Promise<Lesson> {
+        const lesson = await this.lessonRep.findByPk(lesson_id, {
+            include: [{
+                model: CModule,
+                include: [{model: Course, attributes: ['id_course', 'course_name']}]
+            }]
+        });
+        if (!lesson) {
+            throw new NotFoundException(`Lesson( with id ${lesson_id} not found`);
+        }
+
+        return lesson;
     }
 
 }

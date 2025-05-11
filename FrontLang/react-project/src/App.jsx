@@ -4,6 +4,7 @@ import Profile from './components/Profile';
 import Courses from "./components/Courses.jsx";
 import Modules from "./components/Modules.jsx";
 import Course from "./components/Course.jsx";
+import Lesson from "./components/Lesson.jsx";
 
 function App() {
     return (
@@ -14,6 +15,7 @@ function App() {
                 <Route path="/courses" element={<Courses />} />
                 <Route path="/course/:courseId" element={<Course />} />
                 <Route path="/courses/:courseName/Modules" element={<Modules />} />
+                <Route path="/lesson/:lessonId" element={<Lesson />} />
                 <Route path="/" element={<Login />} />
             </Routes>
         </Router>

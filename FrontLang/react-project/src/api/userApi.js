@@ -64,3 +64,15 @@ export const getLessonsByModuleId = async (moduleId) => {
     const response = await apiClient.get(`/lessons/module/${moduleId}`);
     return response.data;
 };
+
+export const getMaterialsByLessonId = async (lessonId) => {
+    const apiClient = createApiClient();
+    const response = await apiClient.get(`/lmaterials/${lessonId}`);
+    return response.data;
+};
+
+export const getLessonById = async (lessonId) => {
+    const apiClient = createApiClient();
+    const response = await apiClient.get(`/lessons/${lessonId}`);
+    return response.data;
+};
