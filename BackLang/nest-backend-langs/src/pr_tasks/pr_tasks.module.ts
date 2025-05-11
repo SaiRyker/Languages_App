@@ -8,12 +8,16 @@ import {PrTask} from "./pr_tasks.model";
 import {Lesson} from "../lessons/lessons.model";
 import {Language} from "../prog_langs/prog_langs.model";
 import {PrSolution} from "../pr_solutions/pr_solutions.model";
+import {CModule} from "../course_modules/course_modules.model";
 
 @Module({
   providers: [PrTasksService],
   controllers: [PrTasksController],
   imports: [
-    SequelizeModule.forFeature([PrTask, Lesson, Language, PrSolution]),
+    SequelizeModule.forFeature([PrTask, Lesson, Language, PrSolution, CModule]),
   ],
+  exports: [
+    PrTasksService
+  ]
 })
 export class PrTasksModule {}

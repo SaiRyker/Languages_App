@@ -9,9 +9,10 @@ import {PrSolution} from "../pr_solutions/pr_solutions.model";
 interface PrCreationAttrs {
     lesson_id: number;
     task_name: string;
+    language_id: number;
     description: string;
-    task_answer: any;
-    correct: any
+    time_limit: number;
+    memory_limit: number;
 }
 
 @Table({ tableName: 'pr_tasks' })
@@ -43,8 +44,8 @@ export class PrTask extends Model<PrTask, PrCreationAttrs> {
     @Column({type: DataType.TEXT, allowNull:false})
     description: string;
 
-    @Column({type: DataType.TEXT, allowNull:false})
-    test_cases: string;
+    // @Column({type: DataType.TEXT, allowNull:false})
+    // test_cases: string;
 
     @Column({type: DataType.INTEGER, allowNull:false})
     time_limit: number;
