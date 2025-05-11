@@ -9,7 +9,7 @@ interface TestCreationAttrs {
     lesson_id: number;
     task_name: string;
     description: string;
-    task_answer: any;
+    task_answers: any;
     correct: any
 }
 
