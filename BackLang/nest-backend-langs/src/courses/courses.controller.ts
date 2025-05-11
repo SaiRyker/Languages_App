@@ -21,4 +21,10 @@ export class CoursesController {
     async getAllCourses(): Promise<Course[]> {
         return this.coursesService.getAllCourses();
     }
+
+    @Get(':course_id')
+    async getCourse(@Param('course_id') course_id: number): Promise<Course> {
+        return this.coursesService.getCourseById(course_id)
+    }
+
 }

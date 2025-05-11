@@ -28,3 +28,39 @@ export const getUserCourses = async () => {
     const response = await apiClient.get('/users/profile/courses');
     return response.data;
 }
+
+export const getCourseByName = async (courseName) => {
+    const apiClient = createApiClient();
+    const response = await apiClient.get(`/courses/name/${courseName}`);
+    return response.data;
+};
+
+export const getCourseById = async (courseId) => {
+    const apiClient = createApiClient();
+    const response = await apiClient.get(`/courses/${courseId}`);
+    return response.data;
+};
+
+export const getModulesByCourseId = async (courseId) => {
+    const apiClient = createApiClient();
+    const response = await apiClient.get(`/cmodules/course/${courseId}`);
+    return response.data;
+};
+
+export const createLesson = async (dto) => {
+    const apiClient = createApiClient();
+    const response = await apiClient.post('/lessons', dto);
+    return response.data;
+};
+
+export const getLessonsByCourseId = async (courseId) => {
+    const apiClient = createApiClient();
+    const response = await apiClient.get(`/lessons/course/${courseId}`);
+    return response.data;
+};
+
+export const getLessonsByModuleId = async (moduleId) => {
+    const apiClient = createApiClient();
+    const response = await apiClient.get(`/lessons/module/${moduleId}`);
+    return response.data;
+};

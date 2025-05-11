@@ -11,6 +11,9 @@ import {Lesson} from "../lessons/lessons.model";
   controllers: [CourseModulesController],
   imports: [
     SequelizeModule.forFeature([CModule, Course, Lesson])
+  ],
+  exports: [
+    CourseModulesService
   ]
 })
 export class CourseModulesModule {}

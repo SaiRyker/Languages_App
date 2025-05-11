@@ -40,4 +40,19 @@ export class CoursesService {
             ],
         });
     }
+
+    async getCourseById(courseId: number): Promise<Course> {
+        const course = await this.courseRep.findByPk(courseId, {
+            include: [
+                {
+                    model: Language,
+                    attributes: ['lang_name'],
+                },
+            ],
+        });
+        if (!course) {
+            throw new NotFoundException(`Course with id ${courseId} not found`);
+        }
+        return course;
+    }
 }

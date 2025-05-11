@@ -19,6 +19,7 @@ function Courses() {
         const fetchCourses = async () => {
             try {
                 const data = await getUserCourses();
+                console.log('Fetched courses:', data); // Отладка
                 setCourses(data);
                 setLoading(false);
                 console.log('Courses data:', data);
@@ -35,6 +36,15 @@ function Courses() {
         fetchCourses();
     }, [navigate]);
 
+    const handleCourseClick = (course_id) => {
+        console.log('Navigating to courseId:', course_id, 'Type:', typeof course_id); // Отладка
+        if (course_id) {
+            navigate(`/course/${course_id}`);
+        } else {
+            console.error('courseId is undefined');
+        }
+    };
+
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
     if (!courses || courses.length === 0) return <div>No courses available</div>;
@@ -45,7 +55,13 @@ function Courses() {
             <ul>
                 {courses.map((course, index) => (
                     <li key={index}>
-                        {course.course_name} (Level: {course.diff_level}, Language: {course.language?.lang_name || 'N/A'})
+                        <span
+                            style={{cursor: 'pointer', color: 'white', textDecoration: 'underline'}}
+                            onClick={() => handleCourseClick(course.id_course)}
+                        >
+                            {course.course_name}
+                        </span>{' '}
+                        (Level: {course.diff_level}, Language: {course.language?.lang_name || 'N/A'})
                     </li>
                 ))}
             </ul>

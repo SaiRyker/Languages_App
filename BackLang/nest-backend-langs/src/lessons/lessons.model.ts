@@ -13,7 +13,16 @@ interface LessonCreationAttrs {
     description?: string;
 }
 
-@Table({tableName: 'lessons'})
+@Table({
+    tableName: 'lessons',
+    indexes: [
+        {
+            unique: true,
+            name: 'modulerId_orderNumLesson_constraint',
+            fields: ['module_id', 'order_number']
+        }
+    ]
+})
 export class Lesson extends Model<Lesson, LessonCreationAttrs> {
     @Column({type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true})
     id_lesson: number;
@@ -25,7 +34,7 @@ export class Lesson extends Model<Lesson, LessonCreationAttrs> {
     @BelongsTo(() => CModule)
     module: CModule
 
-    @Column({type: DataType.STRING, allowNull:false})
+    @Column({type: DataType.STRING, allowNull:false, unique: true})
     lesson_name: string;
 
     @Column({type: DataType.INTEGER, allowNull:false})
