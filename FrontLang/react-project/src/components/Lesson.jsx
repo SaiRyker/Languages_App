@@ -1,6 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getLessonById, getMaterialsByLessonId, getTestTaskByLessonId } from '../api/userApi';
+import {
+    getLessonById,
+    getMaterialsByLessonId,
+    getTestTaskByLessonId,
+    getUserProfile, getUserSolution,
+    saveUserSolution
+} from '../api/userApi';
 
 function Lesson() {
     const { lessonId } = useParams();
@@ -10,10 +16,12 @@ function Lesson() {
     const [userAnswer, setUserAnswer] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [solution, setSolution] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem('token');
+        console.log(token)
         if (!token) {
             navigate('/login');
             return;
@@ -50,6 +58,15 @@ function Lesson() {
                         throw new Error('Invalid test task data received');
                     }
                     setTestTask(testTaskData);
+
+                    const userData = await getUserProfile();
+                    const userId = userData.id_user;
+                    console.log(userId)
+
+                    // Получаем последнюю запись решения
+                    const solutionData = await getUserSolution(testTaskData.id_t_task, userId);
+                    setSolution(solutionData || { status: 'Не начат', score: 0, answer: [] }); // По умолчанию, если решения нет
+
                 } else {
                     console.log('Lesson type is not "теория" or "тест", skipping additional fetch. Lesson type:', lessonData.lesson_type);
                 }
@@ -88,33 +105,31 @@ function Lesson() {
         }
     };
 
-    const handleAnswerChange = (index) => (e) => {
-        const selectedAnswer = e.target.value;
-        setUserAnswer((prev) => {
-            const newAnswer = [...prev];
-            newAnswer[index] = selectedAnswer;
-            return newAnswer;
-        });
+    const handleAnswerChange = (answer, isMultipleChoice) => (e) => {
+        if (isMultipleChoice) {
+            // Для checkbox (множественный выбор)
+            if (e.target.checked) {
+                setUserAnswer((prev) => [...prev, answer]);
+            } else {
+                setUserAnswer((prev) => prev.filter((a) => a !== answer));
+            }
+        } else {
+            // Для radio (один выбор)
+            setUserAnswer([answer]);
+        }
     };
 
     const handleSubmitAnswer = async () => {
         try {
-            const response = await fetch('/api/tests/check-answer', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-                body: JSON.stringify({
-                    task_id: testTask.id_t_task,
-                    userAnswer,
-                }),
-            });
-            const result = await response.json();
-            alert(`Your answer is ${result.isCorrect ? 'correct' : 'incorrect'}`);
+            const userData = await getUserProfile();
+            const userId = userData.id_user;
+
+            const result = await saveUserSolution(testTask.id_t_task, userId, userAnswer);
+            setSolution(result)
+            alert(`Test ${result.status.toLowerCase()}`);
         } catch (err) {
             console.error('Error submitting answer:', err);
-            setError('Failed to check answer');
+            setError('Failed to save answer');
         }
     };
 
@@ -175,21 +190,37 @@ function Lesson() {
                     {Array.isArray(testTask.task_answers) && testTask.task_answers.length > 0 && (
                         <div>
                             <h4>Options:</h4>
-                            {testTask.task_answers.map((answer, index) => (
-                                <div key={index}>
-                                    <input
-                                        type="radio"
-                                        id={`answer-${index}`}
-                                        name="testAnswer"
-                                        value={answer}
-                                        onChange={handleAnswerChange(0)} // Предполагаем один ответ, можно улучшить для множественного выбора
-                                        checked={userAnswer[0] === answer}
-                                    />
-                                    <label htmlFor={`answer-${index}`}>{answer}</label>
-                                </div>
-                            ))}
+                            {testTask.task_answers.map((answer, index) => {
+                                const isMultipleChoice = Array.isArray(testTask.correct) && testTask.correct.length > 1;
+                                return (
+                                    <div key={index}>
+                                        <input
+                                            type={isMultipleChoice ? 'checkbox' : 'radio'}
+                                            id={`answer-${index}`}
+                                            name={isMultipleChoice ? `answer-${index}` : 'answer'}
+                                            value={answer}
+                                            onChange={handleAnswerChange(answer, isMultipleChoice)}
+                                            checked={isMultipleChoice ? userAnswer.includes(answer) : userAnswer[0] === answer}
+                                        />
+                                        <label htmlFor={`answer-${index}`}>{answer}</label>
+                                    </div>
+                                );
+                            })}
                             <button onClick={handleSubmitAnswer}>Submit Answer</button>
                             <p><strong>Correct Answer (for reference):</strong> {testTask.correct.join(', ')}</p>
+                        </div>
+                    )}
+                    {solution && (
+                        <div style={{ marginTop: '10px' }}>
+                            <p><strong>Status:</strong> <span style={{ color: solution.status === 'Завершено' ? 'green' : 'red' }}>{solution.status}</span></p>
+                            <p><strong>Your Answer:</strong> {solution.answer.join(', ')}</p>
+                            <p><strong>Score:</strong> {solution.score}%</p>
+                        </div>
+                    )}
+                    {!solution && (
+                        <div style={{ marginTop: '10px' }}>
+                            <p><strong>Status:</strong> <span style={{ color: 'gray' }}>Не начат</span></p>
+                            <p><strong>Score:</strong> 0%</p>
                         </div>
                     )}
                 </div>
