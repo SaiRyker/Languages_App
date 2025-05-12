@@ -91,6 +91,22 @@ export class TestTasksService {
         return { isCorrect };
     }
 
+    async getTestTaskByLessonId(lesson_id: number): Promise<TestTask> {
+        const lesson = await this.lessonRep.findByPk(lesson_id);
+        if (!lesson) {
+            throw new NotFoundException(`Урок с таким идентификатором ${lesson_id} не найден`);
+        }
+
+        const test = await this.testTaskRep.findOne({
+            where: { lesson_id: lesson_id },
+        });
+        if (!test) {
+            throw new NotFoundException(`Тестовое задание не найдено`);
+        }
+
+        return test;
+    }
+
 
 
 }

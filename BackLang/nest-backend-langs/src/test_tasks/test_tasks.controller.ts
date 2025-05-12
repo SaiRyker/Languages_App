@@ -30,4 +30,11 @@ export class TestTasksController {
         return this.testTasksService.checkAnswer(dto);
     }
 
+    @ApiOperation({ summary: 'Получение тестового задания по ID урока' })
+    @ApiResponse({ status: 200, type: [TestTask] })
+    @Get('lesson/:lesson_id')
+    async getTestTaskByLessonId(@Param('lesson_id') lesson_id: number): Promise<TestTask> {
+        return this.testTasksService.getTestTaskByLessonId(lesson_id);
+    }
+
 }

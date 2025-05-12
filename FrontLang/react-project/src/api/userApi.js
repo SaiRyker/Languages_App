@@ -76,3 +76,9 @@ export const getLessonById = async (lessonId) => {
     const response = await apiClient.get(`/lessons/${lessonId}`);
     return response.data;
 };
+
+export const getTestTaskByLessonId = async (lessonId) => {
+    const apiClient = createApiClient();
+    const response = await apiClient.get(`/tests/lesson/${lessonId}`);
+    return response.data;
+};
