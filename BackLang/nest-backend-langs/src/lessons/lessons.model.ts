@@ -47,7 +47,7 @@ export class Lesson extends Model<Lesson, LessonCreationAttrs> {
     @Column({type: DataType.INTEGER, allowNull:false})
     order_number: number;
 
-    @Column({type: DataType.STRING, allowNull:false})
+    @Column({type: DataType.STRING, allowNull:true})
     description: string;
 
     @Column({
