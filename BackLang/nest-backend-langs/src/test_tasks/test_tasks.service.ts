@@ -7,12 +7,16 @@ import {Course} from "../courses/courses.model";
 import {CreateTaskDto} from "./dto/create-task.dto";
 import {Type} from "class-transformer";
 import {CheckAnswerDto} from "./dto/check-answer.dto";
+import {TSolution} from "../test_solutions/test_solutions.model";
+import {User} from "../users/user.model";
 
 @Injectable()
 export class TestTasksService {
     constructor(@InjectModel(TestTask) private testTaskRep: typeof TestTask,
                 @InjectModel(Lesson) private lessonRep: typeof Lesson,
-                @InjectModel(CModule) private moduleRep: typeof CModule,) {}
+                @InjectModel(CModule) private moduleRep: typeof CModule,
+                @InjectModel(TSolution) private tsolutionRep: typeof TSolution,
+                @InjectModel(User) private userRep: typeof User,) {}
 
     async createTestTask(dto: CreateTaskDto) {
         const lesson = await this.lessonRep.findByPk(dto.lesson_id, {
@@ -106,6 +110,8 @@ export class TestTasksService {
 
         return test;
     }
+
+
 
 
 

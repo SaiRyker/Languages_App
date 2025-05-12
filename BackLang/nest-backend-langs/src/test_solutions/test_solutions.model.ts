@@ -13,7 +13,8 @@ interface TSolCreationAttrs {
     test_task_id: number;
     student_id: number;
     answer: any;
-    status?: TSolStatus;
+    status: TSolStatus;
+    score: number;
 }
 
 @Table({ tableName: 'test_solutions' })
