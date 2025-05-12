@@ -1,10 +1,7 @@
 import {Table, Column, Model, DataType, ForeignKey, BelongsTo, HasMany} from 'sequelize-typescript';
 import {Lesson} from "../lessons/lessons.model";
-import {json} from "sequelize";
 import {Language} from "../prog_langs/prog_langs.model";
 import {PrSolution} from "../pr_solutions/pr_solutions.model";
-
-
 
 interface PrCreationAttrs {
     lesson_id: number;
@@ -17,11 +14,7 @@ interface PrCreationAttrs {
 
 @Table({ tableName: 'pr_tasks' })
 export class PrTask extends Model<PrTask, PrCreationAttrs> {
-    @Column({
-        type: DataType.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    })
+    @Column({type: DataType.INTEGER, primaryKey: true, autoIncrement: true})
     id_pr_task: number;
 
     @ForeignKey(() => Lesson)
@@ -44,8 +37,8 @@ export class PrTask extends Model<PrTask, PrCreationAttrs> {
     @Column({type: DataType.TEXT, allowNull:false})
     description: string;
 
-    // @Column({type: DataType.TEXT, allowNull:false})
-    // test_cases: string;
+    @Column({ type: DataType.JSON , allowNull:false})
+    test_cases: Array<{ input: string; output: string }>;
 
     @Column({type: DataType.INTEGER, allowNull:false})
     time_limit: number;

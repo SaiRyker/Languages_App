@@ -7,7 +7,8 @@ import {PrTask} from "../pr_tasks/pr_tasks.model";
 
 export enum PrSolStatus {
     uncompleted = 'Неудачно',
-    completed = 'Завершено'
+    completed = 'Завершено',
+    error = 'Ошибка'
 }
 
 interface PrSolCreationAttrs {
@@ -19,11 +20,7 @@ interface PrSolCreationAttrs {
 
 @Table({ tableName: 'pr_solutions' })
 export class PrSolution extends Model<PrSolution, PrSolCreationAttrs> {
-    @Column({
-        type: DataType.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    })
+    @Column({type: DataType.INTEGER, primaryKey: true, autoIncrement: true})
     id_pr_sol: number;
 
     @ForeignKey(() => PrTask)
@@ -40,12 +37,15 @@ export class PrSolution extends Model<PrSolution, PrSolCreationAttrs> {
     @BelongsTo(() => User)
     user: User;
 
-    @Column({type: DataType.TEXT, allowNull:false})
-    solution: string;
+    @Column({type: DataType.TEXT})
+    code_user: string;
 
     @Column({type: DataType.ENUM(...Object.values(PrSolStatus)), allowNull:false, defaultValue: PrSolStatus.uncompleted})
     status: PrSolStatus;
 
     @Column({type: DataType.INTEGER, allowNull:false})
     score: number;
+
+    @Column({ type: DataType.JSON })
+    test_results: Array<{ testId: number; passed: boolean; output: string; error?: string }>;
 }
