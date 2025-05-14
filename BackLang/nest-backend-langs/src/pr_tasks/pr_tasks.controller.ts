@@ -22,4 +22,20 @@ export class PrTasksController {
         return this.prTasksService.getCoursePrTasksByCId(course_id);
     }
 
+    @ApiOperation({ summary: 'Получение практического задания по ID урока' })
+    @ApiResponse({ status: 200, type: [PrTask] })
+    @Get('lesson/:lesson_id')
+    async getPrTaskByLessonId(@Param('lesson_id') lesson_id: number): Promise<PrTask> {
+        return this.prTasksService.getPrTaskByLessonId(lesson_id);
+    }
+
+    @Post('run-code')
+    async runCode(@Body() body: { code: string; language: number }) {
+        console.log('Received request:', body); // Отладка
+        const { code, language } = body;
+        const result = await this.prTasksService.runCodeInContainer(code, language);
+        console.log('Response:', result); // Отладка
+        return result;
+    }
+
 }
