@@ -1,4 +1,4 @@
-import {IsNotEmpty, IsNumber, IsString, MinLength} from "class-validator";
+import {IsArray, IsNotEmpty, IsNumber, IsString, MinLength} from "class-validator";
 
 
 export class CreatePrDto {
@@ -20,6 +20,9 @@ export class CreatePrDto {
     @IsNotEmpty()
     @MinLength(5)
     description: string;
+
+    @IsArray()
+    test_cases: { input: string; expected: string }[];
 
     @IsNumber()
     @IsNotEmpty()

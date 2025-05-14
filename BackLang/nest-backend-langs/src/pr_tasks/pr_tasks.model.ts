@@ -8,6 +8,7 @@ interface PrCreationAttrs {
     task_name: string;
     language_id: number;
     description: string;
+    test_cases: { input: string; expected: string }[];
     time_limit: number;
     memory_limit: number;
 }
@@ -37,8 +38,8 @@ export class PrTask extends Model<PrTask, PrCreationAttrs> {
     @Column({type: DataType.TEXT, allowNull:false})
     description: string;
 
-    @Column({ type: DataType.JSON , allowNull:false})
-    test_cases: Array<{ input: string; output: string }>;
+    @Column({ type: DataType.ARRAY(DataType.JSON) , allowNull:false})
+    test_cases: { input: string; expected: string }[];
 
     @Column({type: DataType.INTEGER, allowNull:false})
     time_limit: number;
