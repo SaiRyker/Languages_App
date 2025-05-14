@@ -12,10 +12,12 @@ export enum PrSolStatus {
 }
 
 interface PrSolCreationAttrs {
-    test_task_id: number;
+    pr_task_id: number;
     student_id: number;
-    answer: any;
-    status?: PrSolStatus;
+    code_user: string;
+    status: PrSolStatus;
+    score: number;
+    test_results: { input: string; expected: string; output: string; passed: boolean; error?: string }[];
 }
 
 @Table({ tableName: 'pr_solutions' })
@@ -47,5 +49,11 @@ export class PrSolution extends Model<PrSolution, PrSolCreationAttrs> {
     score: number;
 
     @Column({ type: DataType.JSON })
-    test_results: Array<{ testId: number; passed: boolean; output: string; error?: string }>;
+    test_results: {
+        input: string;
+        expected: string;
+        output: string;
+        passed: boolean;
+        error?: string;
+    }[];
 }
