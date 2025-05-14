@@ -11,7 +11,7 @@ import {Language} from "./prog_langs.model";
     SequelizeModule.forFeature([Language])
   ],
   exports: [
-
+    ProgLangsService
   ]
 })
 export class ProgLangsModule {}
