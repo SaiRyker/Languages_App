@@ -5,6 +5,8 @@ import Courses from "./components/Courses.jsx";
 import Modules from "./components/Modules.jsx";
 import Course from "./components/Course.jsx";
 import Lesson from "./components/Lesson.jsx";
+import PrEditor from "./components/PracticalEditor.jsx";
+import PracticalEditor from "./components/PracticalEditor.jsx";
 
 function App() {
     return (
@@ -16,6 +18,7 @@ function App() {
                 <Route path="/course/:courseId" element={<Course />} />
                 <Route path="/courses/:courseName/Modules" element={<Modules />} />
                 <Route path="/lesson/:lessonId" element={<Lesson />} />
+                <Route path="/pr-task/:prTaskId" element={<PracticalEditor />} />
                 <Route path="/" element={<Login />} />
             </Routes>
         </Router>
