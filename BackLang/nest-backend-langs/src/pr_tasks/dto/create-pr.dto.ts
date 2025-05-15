@@ -21,14 +21,6 @@ export class CreatePrDto {
     @MinLength(5)
     description: string;
 
-    @IsArray()
-    test_cases: { input: string; expected: string }[];
-
-    @IsNumber()
-    @IsNotEmpty()
-    time_limit: number;
-
-    @IsNumber()
-    @IsNotEmpty()
-    memory_limit: number;
+    @IsString()
+    test_code: string;
 }
