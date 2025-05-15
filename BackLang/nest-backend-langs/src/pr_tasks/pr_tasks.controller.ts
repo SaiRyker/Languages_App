@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Param, Post} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, Put} from '@nestjs/common';
 import {PrTasksService} from "./pr_tasks.service";
 import {ApiOperation, ApiResponse} from "@nestjs/swagger";
 import {PrTask} from "./pr_tasks.model";
@@ -30,12 +30,25 @@ export class PrTasksController {
     }
 
     @Post('run-code')
-    async runCode(@Body() body: { code: string; language: number }) {
+    async runCode(@Body() body: { code: string; lang_name: string }) {
         console.log('Received request:', body); // Отладка
-        const { code, language } = body;
-        const result = await this.prTasksService.runCodeInContainer(code, language);
+        const { code, lang_name } = body;
+        const result = await this.prTasksService.runCodeInContainer(code, lang_name);
         console.log('Response:', result); // Отладка
         return result;
+    }
+
+    @Put('/:id_pr_task')
+    async updateTask(@Param('id_pr_task') id: number,
+                     @Body() body: { task_name: string; description: string; test_code: string; language_id: number; lesson_id: number },
+    ) {
+        return this.prTasksService.updateTask(id, {
+            task_name: body.task_name,
+            description: body.description,
+            test_code: body.test_code,
+            language_id: body.language_id,
+            lesson_id: body.lesson_id
+        });
     }
 
 }
