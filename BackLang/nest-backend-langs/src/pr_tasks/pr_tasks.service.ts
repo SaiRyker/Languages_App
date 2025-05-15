@@ -94,9 +94,7 @@ export class PrTasksService {
         return prTask;
     }
 
-
-
-    async runCodeInContainer(code: string, language_id: number, input: string = '') {
+    async runCodeInContainer(code: string, lang_name: string, input: string = '') {
 
         const projectRoot = path.resolve(__dirname, '../../');
         console.log(projectRoot)
@@ -108,14 +106,9 @@ export class PrTasksService {
             fs.mkdirSync(tempDir, {recursive: true});
         }
 
-        // const language = await this.langRep.findByPk(language_id)
-        // if (!language) {
-        //     throw new NotFoundException(`Language with id ${language_id} not found`);
-        // }
-        // const langName = language.get("lang_name").toLowerCase()
-        const langName = 'javascript'
 
-        const codeFile = langName === 'javascript' ? 'solution.js' : 'solution.py';
+
+        const codeFile = lang_name === 'javascript' ? 'solution.js' : 'solution.py';
         console.log(codeFile)
 
         const codePath = path.join(tempDir, codeFile);
@@ -127,8 +120,9 @@ export class PrTasksService {
         let errorOutput = '';
 
         try {
-            const image = langName === 'javascript' ? 'node:16-slim' : 'python:3.9-slim';
-            const cmd = langName === 'javascript' ? ['node', '/app/solution.js'] : ['python', '/app/solution.py'];
+            console.log(lang_name)
+            const image = lang_name === 'javascript' ? 'node:16-slim' : 'python:3.9-slim';
+            const cmd = lang_name === 'javascript' ? ['node', '/app/solution.js'] : ['python', '/app/solution.py'];
 
             console.log(`Creating container with image: ${image}, cmd: ${cmd}`); // Отладка
 
@@ -174,18 +168,6 @@ export class PrTasksService {
                     console.log('Raw chunk received:', chunkStr);
                     output += chunkStr; // Простое добавление без разделения
                     console.log('Output received 1:', output);
-                    // const headerSize = 8; // Размер заголовка Docker
-                    // if (chunk.length > headerSize) {
-                    //     const streamType = chunk[0]; // 1 для stdout, 2 для stderr
-                    //     const payload = chunkStr.slice(headerSize);
-                    //     if (streamType === 1) {
-                    //         output += payload; // Накопление stdout
-                    //         console.log('Captured stdout:', payload);
-                    //     } else if (streamType === 2) {
-                    //         errorOutput += payload; // Накопление stderr
-                    //         console.log('Captured stderr:', payload);
-                    //     }
-                    // }
                 });
 
                 stream.on('error', (err) => {
@@ -224,6 +206,20 @@ export class PrTasksService {
 
         }
         ;
+    }
+
+    async updateTask(id_pr_task: number, data: { task_name: string; description: string; test_code: string; language_id: number; lesson_id: number }) {
+        const task = await this.prTaskRep.findByPk(id_pr_task);
+        if (!task) {
+            throw new NotFoundException(`Task with id ${id_pr_task} not found`);
+        }
+        return task.update({
+            lesson_id: data.lesson_id,
+            task_name: data.task_name,
+            language_id: data.language_id,
+            description: data.description,
+            test_code: data.test_code
+        });
     }
 
 }
