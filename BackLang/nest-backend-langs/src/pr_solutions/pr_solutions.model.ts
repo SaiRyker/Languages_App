@@ -17,7 +17,7 @@ interface PrSolCreationAttrs {
     code_user: string;
     status: PrSolStatus;
     score: number;
-    test_results: { input: string; expected: string; output: string; passed: boolean; error?: string }[];
+    test_results: {passed: boolean; error?: string }[];
 }
 
 @Table({ tableName: 'pr_solutions' })
@@ -50,9 +50,6 @@ export class PrSolution extends Model<PrSolution, PrSolCreationAttrs> {
 
     @Column({ type: DataType.JSON })
     test_results: {
-        input: string;
-        expected: string;
-        output: string;
         passed: boolean;
         error?: string;
     }[];
