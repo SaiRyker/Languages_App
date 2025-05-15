@@ -11,6 +11,12 @@ const createApiClient = () => {
     });
 };
 
+export const getLanguageById = async (language_id) => {
+    const apiClient = createApiClient();
+    const response = await apiClient.get(`/languages/${language_id}`);
+    return response.data;
+};
+
 export const getUserProfile = async () => {
     const apiClient = createApiClient();
     const response = await apiClient.get('/users/profile');
@@ -105,5 +111,58 @@ export const getUserSolution = async (testTaskId, userId) => {
 export const getUserSolutionsByUserId = async (userId) => {
     const apiClient = createApiClient();
     const response = await apiClient.get(`/tsolutions/user/${userId}`);
+    return response.data;
+};
+
+export const getPrTaskByLessonId = async (lesson_id) => {
+    const apiClient = createApiClient();
+    const response = await apiClient.get(`/practicals/lesson/${lesson_id}`);
+    return response.data;
+};
+
+export const updatePrTask = async (taskId, data) => {
+    const apiClient = createApiClient();
+    const response = await apiClient.put(`/practicals/${taskId}`, data);
+    return response.data;
+};
+
+export const getUserPrSolution = async (prTask_id, student_id) => {
+    const apiClient = createApiClient();
+    const response = await apiClient.get(`/prsolutions/${prTask_id}/${student_id}`);
+    return response.data;
+};
+
+export const runCode = async (code, lang_name) => {
+    const apiClient = createApiClient();
+    try {
+        console.log(code, lang_name)
+        const response = await apiClient.post('/practicals/run-code', {
+            code,
+            lang_name,
+        });
+        console.log(code, lang_name)
+        console.log(response)
+        return response.data;
+    } catch (error) {
+        throw new Error('Failed to run code: ' + (error.response?.statusText || error.message));
+    }
+};
+
+export const saveUserPrSolution = async (prTaskId, userId, codeUser, lang_name) => {
+    const apiClient = createApiClient();
+
+    console.log('Before normalization - codeUser:', codeUser); // Отладочный вывод
+    const normalizedCode = codeUser.trim().replace(/\n\s*/g, '\n');
+    console.log('After normalization - normalizedCode:', normalizedCode); // Отладочный вывод
+    console.log(prTaskId)
+    console.log(userId)
+    console.log("KOd", codeUser)
+    const response = await apiClient.post('/prsolutions/user-submit', {
+        prTaskId: prTaskId,
+        studentId: userId,
+        code: normalizedCode,
+        lang_name
+    });
+    console.log(response)
     return response.data;
 };
