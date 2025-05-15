@@ -12,6 +12,11 @@ export class ProgLangsController {
         return this.progLangService.createLanguage(dto);
     }
 
+    @Get('/:language_id')
+    async getLanguageById(@Param('language_id') language_id: number): Promise<Language> {
+        return this.progLangService.getLanguageById(language_id);
+    }
+
     @Get()
     async getAllLanguages(): Promise<Language[]> {
         return this.progLangService.getAllLanguages();

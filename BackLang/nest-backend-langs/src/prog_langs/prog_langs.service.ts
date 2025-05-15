@@ -1,6 +1,5 @@
-import {ConflictException, Injectable} from '@nestjs/common';
+import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from "@nestjs/sequelize";
-import {Model} from "sequelize-typescript";
 import {Language} from "./prog_langs.model";
 import {CreateLanguageDto} from "./dto/create-lang.dto";
 
@@ -21,6 +20,16 @@ export class ProgLangsService {
             }
             throw error;
         }
+    }
+
+    async getLanguageById(language_id: number): Promise<Language> {
+        const language = await this.langRep.findOne({
+            where: {id_lang: language_id},
+        })
+        if (!language) {
+            throw new NotFoundException(`Language with id ${language_id} not found`);
+        }
+        return language;
     }
 
     async getAllLanguages(): Promise<Language[]> {
