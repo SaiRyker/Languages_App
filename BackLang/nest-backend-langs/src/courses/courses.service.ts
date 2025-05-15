@@ -3,6 +3,8 @@ import {InjectModel} from "@nestjs/sequelize";
 import {Course} from "./courses.model";
 import {CreateCourseDto} from "./dto/create-course.dto";
 import {Language} from "../prog_langs/prog_langs.model";
+import {CModule} from "../course_modules/course_modules.model";
+import {Lesson} from "../lessons/lessons.model";
 
 @Injectable()
 export class CoursesService {
@@ -20,7 +22,7 @@ export class CoursesService {
                 {
                     model: Language,
                     attributes: ['lang_name'],
-                }
+                },
             ]
         });
         if (!courses) {
@@ -48,6 +50,10 @@ export class CoursesService {
                     model: Language,
                     attributes: ['lang_name'],
                 },
+                {
+                    model: CModule,
+                    include: [{model: Lesson}]
+                }
             ],
         });
         if (!course) {
