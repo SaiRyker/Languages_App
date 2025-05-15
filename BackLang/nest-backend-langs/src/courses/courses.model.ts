@@ -24,7 +24,7 @@ export class Course extends Model<Course, CourseCreationAttrs> {
     @Column({type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true})
     id_course: number;
 
-    @Column({type: DataType.STRING, unique: true, allowNull:false})
+    @Column({type: DataType.STRING, allowNull:false})
     course_name: string;
 
     @Column({type: DataType.ENUM(...Object.values(DiffLevel)), allowNull:false, defaultValue: DiffLevel.intermediate})
