@@ -1,7 +1,9 @@
-import {Body, Controller, Post} from '@nestjs/common';
+import {Body, Controller, Post, UseGuards} from '@nestjs/common';
 import {ApiTags} from "@nestjs/swagger";
 import {CreateUserDto} from "../users/dto/create-user.dto";
 import {AuthService} from "./auth.service";
+import {Roles} from "./roles-auth.decorator";
+import {RolesGuard} from "./roles.guard";
 
 @ApiTags('Авторизация')
 @Controller('auth')
@@ -14,6 +16,8 @@ export class AuthController {
         return this.authService.login(userDto)
     }
 
+    @Roles("admin")
+    @UseGuards(RolesGuard)
     @Post('/register')
     registration(@Body() userDto: CreateUserDto) {
         return this.authService.registration(userDto)
