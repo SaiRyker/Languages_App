@@ -89,7 +89,6 @@ export const getTestTaskByLessonId = async (lessonId) => {
     return response.data;
 };
 
-// Новый метод для сохранения решения
 export const saveUserSolution = async (testTaskId, userId, userAnswer) => {
     const apiClient = createApiClient();
     const response = await apiClient.post('/tsolutions', {
@@ -100,14 +99,12 @@ export const saveUserSolution = async (testTaskId, userId, userAnswer) => {
     return response.data;
 };
 
-// Новый метод для получения решения
 export const getUserSolution = async (testTaskId, userId) => {
     const apiClient = createApiClient();
     const response = await apiClient.get(`/tsolutions/${testTaskId}/${userId}`);
     return response.data;
 };
 
-// Новый метод для получения всех решений пользователя
 export const getUserSolutionsByUserId = async (userId) => {
     const apiClient = createApiClient();
     const response = await apiClient.get(`/tsolutions/user/${userId}`);
