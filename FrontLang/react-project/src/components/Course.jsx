@@ -9,6 +9,7 @@ function Course() {
     const [lessons, setLessons] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [expandedModules, setExpandedModules] = useState({});
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -64,9 +65,9 @@ function Course() {
         fetchData();
     }, [courseId, navigate]);
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>{error}</div>;
-    if (!course) return <div>Course not found</div>;
+    if (loading) return <div className="course-loading">Loading...</div>;
+    if (error) return <div className="course-error">{error}</div>;
+    if (!course) return <div className="course-not-found">Course not found</div>;
 
     const lessonsByModule = lessons.reduce((acc, lesson) => {
         if (!acc[lesson.module_id]) {
@@ -80,46 +81,73 @@ function Course() {
         navigate(`/lesson/${lessonId}`);
     };
 
+    const toggleModule = (moduleId) => {
+        setExpandedModules((prev) => ({
+            ...prev,
+            [moduleId]: !prev[moduleId],
+        }));
+    };
+
     return (
-        <div>
-            <h2>{course.course_name}</h2>
-            <p>Level: {course.diff_level || 'N/A'}, Language: {course.language?.lang_name || 'N/A'}</p>
+        <div className="course-container">
+            <div className="course-header">
+                <h2>{course.course_name}</h2>
+                <p>Уровень сложности: {course.diff_level || 'N/A'}</p>
+                <p> Язык программирования: {course.language?.lang_name || 'N/A'}</p>
+            </div>
             {modules.length > 0 ? (
-                <div>
-                    <h3>Course Structure:</h3>
-                    <ul>
-                        {modules.map((module, index) => (
-                            <li key={index}>
-                                <strong>{module.module_name} (Order: {module.order_number})</strong>
-                                {(lessonsByModule[module.id_module] || []).length > 0 ? (
-                                    <ul>
-                                        {lessonsByModule[module.id_module].map((lesson, lessonIndex) => (
-                                            <li key={lessonIndex}>
-                                                <span
-                                                    style={{
-                                                        cursor: 'pointer',
-                                                        color: 'blue',
-                                                        textDecoration: 'underline'
-                                                    }}
-                                                    onClick={() => handleLessonClick(lesson.id_lesson)}
-                                                >
-                                                {lesson.lesson_name}
-                                                    </span>{' '}
-                                                    (Order: {lesson.order_number}, Description: {lesson.description || 'N/A'})
-                                            </li>
-                                            ))}
-                                    </ul>
-                                ) : (
-                                    <p>No lessons available</p>
+                <div className="course-structure">
+                    <h3>Программа курса:</h3>
+                    <div className="modules-list">
+                        {modules.map((module) => (
+                            <div
+                                key={module.id_module}
+                                className={`module-card ${expandedModules[module.id_module] ? 'expanded' : ''}`}
+                            >
+                                <div
+                                    className="module-header"
+                                    onClick={() => toggleModule(module.id_module)}
+                                >
+                                    <span className="module-order">{module.order_number}.</span>
+                                    <span className="module-name">{module.module_name}</span>
+                                    <span className="module-toggle">
+                                        {expandedModules[module.id_module] ? '−' : '+'}
+                                    </span>
+                                </div>
+                                {expandedModules[module.id_module] && (
+                                    <div className="module-content">
+                                        {(lessonsByModule[module.id_module] || []).length > 0 ? (
+                                            <ul className="lessons-list">
+                                                {lessonsByModule[module.id_module].map((lesson) => (
+                                                    <li key={lesson.id_lesson} className="lesson-item">
+                                                        <span className="lesson-order">{lesson.order_number}.</span>
+                                                        <span
+                                                            className="lesson-link"
+                                                            onClick={() => handleLessonClick(lesson.id_lesson)}
+                                                        >
+                                                            {lesson.lesson_name}
+                                                        </span>
+                                                        <span className="lesson-details">
+                                                            (Description: {lesson.description || 'N/A'})
+                                                        </span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            <p className="no-lessons">Доступных уроков нет</p>
+                                        )}
+                                    </div>
                                 )}
-                            </li>
+                            </div>
                         ))}
-                    </ul>
+                    </div>
                 </div>
             ) : (
-                <p>No modules available</p>
+                <p className="no-modules">Доступных модулей нет</p>
             )}
-            <button onClick={() => navigate('/courses')}>Back to Courses</button>
+            <button className="back-button" onClick={() => navigate('/courses')}>
+                Вернуться к курсам
+            </button>
         </div>
     );
 }
