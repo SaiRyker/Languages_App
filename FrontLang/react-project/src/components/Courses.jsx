@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getUserCourses } from '../api/userApi';
+import {useState, useEffect} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {getUserCourses} from '../api/userApi';
+import '../App.css';
 
 function Courses() {
     const [courses, setCourses] = useState([]);
@@ -51,22 +52,30 @@ function Courses() {
     if (!courses || courses.length === 0) return <div>No courses available</div>;
 
     return (
-        <div>
-            <h2>My Courses</h2>
-            <ul>
-                {courses.map((course, index) => (
-                    <li key={index}>
-                        <span
-                            style={{cursor: 'pointer', color: 'white', textDecoration: 'underline'}}
+        <div className="courses-container">
+            <div className="courses-wrapper">
+                <h2>Мои курсы</h2>
+                <div className="courses-list">
+                    {courses.map((course) => (
+                        <div
+                            key={course.id_course}
+                            className="course-card"
                             onClick={() => handleCourseClick(course.id_course)}
                         >
-                            {course.course_name}
-                        </span>{' '}
-                        (Level: {course.diff_level}, Language: {course.language?.lang_name || 'N/A'})
-                    </li>
-                ))}
-            </ul>
-            <button onClick={() => navigate('/profile')}>Back to Profile</button>
+                            <h3 className="course-title">{course.course_name}</h3>
+                            <p className="course-details">
+                                Уровень сложности: {course.diff_level}
+                            </p>
+                            <p className="course-details">
+                                Язык программирования: {course.language?.lang_name || 'N/A'}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+                <button className="back-button" onClick={() => navigate('/profile')}>
+                    Вернуться в профиль
+                </button>
+            </div>
         </div>
     );
 }
