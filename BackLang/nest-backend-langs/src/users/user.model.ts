@@ -10,7 +10,9 @@ import {GroupStudent} from "../student_groups/group-students.model";
 interface UserCreationAttrs {
     user_login: string;
     user_email: string;
-    user_password: string;
+    role_name: string;
+    user_fio?: string;
+    user_password?: string;
 }
 
 @Table({tableName: 'users'})
