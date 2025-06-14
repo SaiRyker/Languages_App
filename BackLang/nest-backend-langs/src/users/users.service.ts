@@ -1,4 +1,4 @@
-import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable, NotFoundException} from '@nestjs/common';
 import {User} from "./user.model";
 import {InjectModel} from "@nestjs/sequelize";
 import {CreateUserDto} from "./dto/create-user.dto";
@@ -18,7 +18,12 @@ export class UsersService {
 
     async createUser(dto: CreateUserDto) {
         const user = await this.userRepository.create(dto);
-        const role = await this.roleService.getRoleByValue("admin")
+        const role = await this.roleService.getRoleByValue(dto.role_name);
+
+        if (!role) {
+            throw new NotFoundException("Role Not Found");
+        }
+
         await user.$set('roles', [role.dataValues.id_role])
         user.roles = [role.dataValues]
         console.log(user)
