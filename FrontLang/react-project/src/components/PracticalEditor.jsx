@@ -64,7 +64,7 @@ const PracticalEditor = ({ lessonId, onClose, onTaskUpdated }) => {
     if (error) return <div style={{ color: 'red' }}>{error}</div>;
 
     return (
-        <div style={{ padding: '20px' }}>
+        <div style={{ padding: '20px', backgroundColor: '#000000' }}>
             <h2>Edit Task</h2>
             <div>
                 <label>
