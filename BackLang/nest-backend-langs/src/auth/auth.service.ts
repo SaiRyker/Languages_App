@@ -14,7 +14,7 @@ export class AuthService {
     async login(userDto: CreateUserDto) {
         const user = await this.validateUser(userDto);
         if (!user) {
-            throw new UnauthorizedException({message: 'Некорректные почтаff2 или пароль'});
+            throw new UnauthorizedException({message: 'Некорректные почта или пароль'});
         }
         return this.generateToken(user);
     }
@@ -24,10 +24,37 @@ export class AuthService {
         if (candidate) {
             throw new HttpException('Пользователь с такой почтой уже существует', HttpStatus.BAD_REQUEST);
         }
-        const hashPassword = await  bcrypt.hash(userDto.user_password, 5);
+        const generatedPassword = this.generateStrongPassword(Math.floor(Math.random() * (15 - 8 + 1)) + 8);
+        const hashPassword = await  bcrypt.hash(generatedPassword, 5);
         const user = await this.usersService.createUser({...userDto, user_password: hashPassword});
 
         return this.generateToken(user);
+    }
+
+    private generateStrongPassword(length: number = 8): string {
+        const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const lowercase = 'abcdefghijklmnopqrstuvwxyz';
+        const numbers = '0123456789';
+        const specialChars = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+        const allChars = uppercase + lowercase + numbers + specialChars;
+
+        let password = '';
+        password += uppercase[Math.floor(Math.random() * uppercase.length)];
+        password += lowercase[Math.floor(Math.random() * lowercase.length)];
+        password += numbers[Math.floor(Math.random() * numbers.length)];
+        password += specialChars[Math.floor(Math.random() * specialChars.length)];
+
+        for (let i = password.length; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * allChars.length);
+            password += allChars[randomIndex];
+        }
+
+        password = password
+            .split('')
+            .sort(() => Math.random() - 0.5)
+            .join('');
+
+        return password;
     }
 
     private async generateToken(user: User) {
@@ -54,7 +81,7 @@ export class AuthService {
         if (user instanceof User) {
             const userPass = user.get("user_password");
             if (!user || !userPass) {
-                throw new UnauthorizedException({message: 'Некорректные почтаff или пароль'});
+                throw new UnauthorizedException({message: 'Некорректные почта или пароль'});
             }
 
             if (typeof userPass === "string") {
