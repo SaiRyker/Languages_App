@@ -3,8 +3,6 @@ import {Lesson} from "../lessons/lessons.model";
 import {json} from "sequelize";
 import {TSolution} from "../test_solutions/test_solutions.model";
 
-
-
 interface TestCreationAttrs {
     lesson_id: number;
     task_name: string;

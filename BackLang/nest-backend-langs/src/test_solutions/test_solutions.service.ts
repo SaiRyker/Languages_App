@@ -11,8 +11,7 @@ export class TestSolutionsService {
         @InjectModel(TSolution) private solutionRep: typeof TSolution,
         @InjectModel(User) private userRep: typeof User,
         @InjectModel(TestTask) private testTaskRep: typeof TestTask,
-        private testTasksService: TestTasksService,
-    ) {}
+        private testTasksService: TestTasksService,) {}
 
     async saveUserSolution(testTaskId: number, userId: number, userAnswer: any[]): Promise<TSolution> {
         const testTask = await this.testTaskRep.findByPk(testTaskId);
@@ -32,17 +31,14 @@ export class TestSolutionsService {
         }
 
         if (isMultipleChoice) {
-            // Расчёт процента для множественного выбора
             const correctCount = userAnswer.filter((answer) => correctAnswers.includes(answer)).length;
             score = correctAnswers.length > 0 ? (correctCount / correctAnswers.length) * 100 : 0;
             status = score === 100 ? TSolStatus.completed : TSolStatus.uncompleted;
         } else {
-            // Одиночный выбор
             const isCorrect = JSON.stringify(userAnswer.sort()) === JSON.stringify(correctAnswers.sort());
             score = isCorrect ? 100 : 0;
             status = isCorrect ? TSolStatus.completed : TSolStatus.uncompleted;
         }
-
 
         const solution = await this.solutionRep.create({
             test_task_id: testTaskId,
@@ -75,6 +71,4 @@ export class TestSolutionsService {
         });
         return solutions;
     }
-
-
 }
