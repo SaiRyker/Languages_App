@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {getUserGroup, getUserProfile} from "../api/userApi.js";
+import '../App.css';
 
 function Profile() {
     const [user, setUser] = useState(null);
@@ -43,28 +44,46 @@ function Profile() {
     const roles = user.roles?.map((role) => role.role_name) || [];
 
     return (
-        <div>
-            <div>
-                <h2>Profile</h2>
-                <p>Login: {user.user_login}</p>
-                <p>Email: {user.user_email}</p>
-                <p>Roles: {roles.join(', ') || 'No roles'}</p>
-                {
-                    groups.length > 0 && (
-                        <div>
-                            <h3>Groups:</h3>
-                            <ul>
-                                {
-                                    groups.map((group, index) => (
-                                        <li key={index}>{group.group_name} (Status: {group.status})</li>
-                                    ))
-                                }
-                            </ul>
-                        </div>
-                    )
-                }
-                <button onClick={() => {navigate('/courses');}}>Мои курсы</button>
-                <button onClick={() => {localStorage.removeItem('token'); navigate('/login');}}>Выйти</button>
+        <div className="profile-container">
+            <div className="profile-wrapper">
+                <div className="profile-card">
+                    <h2>Профиль</h2>
+                    <p className="profile-info">ФИО: {user.user_fio}</p>
+                    <p className="profile-info">Логин: {user.user_login}</p>
+                    <p className="profile-info">Email: {user.user_email}</p>
+                    <p className="profile-info">Должность: {roles.join(', ') || 'No roles'}</p>
+                    {
+                        groups.length > 0 && (
+                            <div className="groups-section">
+                                <h3>Студенческая группа:</h3>
+                                <ul className="groups-list">
+                                    {
+                                        groups.map((group, index) => (
+                                            <li className="group-item" key={index}>{group.group_name} (Статус: {group.status})</li>
+                                        ))
+                                    }
+                                </ul>
+                            </div>
+                        )
+                    }
+                    <div className="profile-actions">
+                        <button
+                            className="action-button courses-button"
+                            onClick={() => navigate('/courses')}
+                        >
+                            Мои курсы
+                        </button>
+                        <button
+                            className="action-button logout-button"
+                            onClick={() => {
+                                localStorage.removeItem('token');
+                                navigate('/login');
+                            }}
+                        >
+                            Выйти
+                        </button>
+                    </div>
+                </div>
             </div>
             <div>
 
