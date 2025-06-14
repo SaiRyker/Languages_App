@@ -96,6 +96,18 @@ export class PrTasksService {
 
     async runCodeInContainer(code: string, lang_name: string, input: string = '') {
 
+        const exportMatch = code.match(/export\s+default\s+(\w+);$/);
+        if (!exportMatch || !exportMatch[1]) {
+            throw new Error('No export default function found. Please add "export default func_name;" at the end of your code.');
+        }
+        const functionName = exportMatch[1];
+        console.log(functionName);
+
+        // Замена export default на module.exports
+        const transformedCode = code.replace(/export\s+default\s+(\w+);$/, 'module.exports = {$1};');
+        console.log(transformedCode);
+
+
         const projectRoot = path.resolve(__dirname, '../../');
         console.log(projectRoot)
 
@@ -107,13 +119,12 @@ export class PrTasksService {
         }
 
 
-
         const codeFile = lang_name === 'javascript' ? 'solution.js' : 'solution.py';
         console.log(codeFile)
 
         const codePath = path.join(tempDir, codeFile);
-        console.log('Code path:', codePath, 'Content:', code);
-        fs.writeFileSync(codePath, code);
+        console.log('Code path:', codePath, 'Content:', transformedCode);
+        fs.writeFileSync(codePath, transformedCode);
         console.log('File written successfully:', fs.existsSync(codePath));
 
         let output = '';
@@ -161,13 +172,37 @@ export class PrTasksService {
             });
 
 
-            // Обещание для ожидания завершения потока и накопления данных
             await new Promise<void>((resolve, reject) => {
+                let buffer = Buffer.alloc(0);
+
                 stream.on('data', (chunk: Buffer) => {
-                    const chunkStr = chunk.toString();
-                    console.log('Raw chunk received:', chunkStr);
-                    output += chunkStr; // Простое добавление без разделения
-                    console.log('Output received 1:', output);
+                    buffer = Buffer.concat([buffer, chunk]);
+
+
+                    while (buffer.length >= 8) {
+                        const header = buffer.slice(0, 8);
+                        const streamType = header[0];
+                        const payloadLength = header.readUInt32BE(4); // Длина данных
+
+                        if (buffer.length < 8 + payloadLength) {
+                            // Ждем, пока придут все данные
+                            break;
+                        }
+
+                        const payload = buffer.slice(8, 8 + payloadLength).toString();
+                        if (streamType === 1) {
+                            // stdout
+                            output += payload;
+                            console.log('Processed stdout:', payload);
+                        } else if (streamType === 2) {
+                            // stderr
+                            errorOutput += payload;
+                            console.log('Processed stderr:', payload);
+                        }
+
+                        // Удаляем обработанный блок из буфера
+                        buffer = buffer.slice(8 + payloadLength);
+                    }
                 });
 
                 stream.on('error', (err) => {
@@ -181,6 +216,7 @@ export class PrTasksService {
                     resolve();
                 });
             });
+
 
             stream.write(input + '\n');
             stream.end();
