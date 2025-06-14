@@ -2,8 +2,6 @@ import {BelongsTo, BelongsToMany, Column, DataType, ForeignKey, HasMany, Model, 
 import {Language} from "../prog_langs/prog_langs.model";
 import {CModule} from "../course_modules/course_modules.model";
 import {StudentGroup} from "../student_groups/student_groups.model";
-import {Role} from "../roles/roles.model";
-import {UserRoles} from "../roles/user-roles.model";
 import {GroupCourse} from "../student_groups/group-courses.model";
 
 export enum DiffLevel {
