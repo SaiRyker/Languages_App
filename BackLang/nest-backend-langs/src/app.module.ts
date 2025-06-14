@@ -56,6 +56,7 @@ import {GroupCourse} from "./student_groups/group-courses.model";
             models: [User, Role, UserRoles, Notification, SuppReqs, SuppResps, Language, Course, CModule, Lesson, Material,
             TestTask, TSolution, PrTask, PrSolution, StudentGroup, GroupStudent, Progress, GroupCourse],
             autoLoadModels: true,
+            synchronize: true
         }),
         UsersModule,
         RolesModule,
