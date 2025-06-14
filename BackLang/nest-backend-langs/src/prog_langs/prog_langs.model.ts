@@ -1,8 +1,4 @@
-import {BelongsToMany, Column, DataType, HasMany, Model, Table} from "sequelize-typescript";
-import {Role} from "../roles/roles.model";
-import {UserRoles} from "../roles/user-roles.model";
-import {SuppReqs} from "../supp_reqs/supp_reqs.model";
-import {Notification} from "../user_notifications/user_notifications.model";
+import { Column, DataType, Model, Table} from "sequelize-typescript";
 
 
 interface LangCreationAttrs {
