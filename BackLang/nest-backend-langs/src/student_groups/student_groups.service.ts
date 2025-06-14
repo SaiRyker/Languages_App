@@ -16,8 +16,7 @@ export class StudentGroupsService {
     constructor(@InjectModel(StudentGroup) private stGroupRep: typeof StudentGroup,
                 @InjectModel(GroupCourse) private courseGrRep: typeof GroupCourse,
                 @InjectModel(GroupStudent) private studGroupRep: typeof GroupStudent,
-                private progressService: UserProgressService) {
-    }
+                private progressService: UserProgressService) {}
 
     async createStudentGroup(dto: CreateGroupDto) {
         const group = await this.stGroupRep.create(dto);
@@ -44,7 +43,6 @@ export class StudentGroupsService {
                     student_id: studId
                 });
 
-                // Получаем курсы группы и создаём записи прогресса для нового студента
                 const groupCourses = await this.courseGrRep.findAll({
                     where: { group_id: dto.group_id },
                 });
@@ -77,7 +75,6 @@ export class StudentGroupsService {
                 course_id: courseId
             })
 
-            // Получаем студентов группы и создаём записи прогресса для нового курса
             const groupStudents = await this.studGroupRep.findAll({
                 where: { group_id: dto.group_id },
                 attributes: ['student_id'],
@@ -87,8 +84,6 @@ export class StudentGroupsService {
         }
         return group;
     }
-
-
 
     async getGroupStudents(groupId: number): Promise<User[]> {
         const group = await this.stGroupRep.findByPk(groupId, {
@@ -108,8 +103,6 @@ export class StudentGroupsService {
         const students = group.get("students")
         return students;
     }
-
-
 
     async getGroupCourses(groupId: number): Promise<Course[]> {
         const group = await this.stGroupRep.findByPk(groupId, {

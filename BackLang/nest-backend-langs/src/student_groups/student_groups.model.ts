@@ -4,7 +4,6 @@ import {User} from "../users/user.model";
 import {GroupStudent} from "./group-students.model";
 import {GroupCourse} from "./group-courses.model";
 
-
 export enum GroupStatus {
     ACTIVE = 'active',
     INACTIVE = 'inactive',
