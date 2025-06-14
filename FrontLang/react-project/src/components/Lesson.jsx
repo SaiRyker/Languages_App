@@ -349,14 +349,14 @@ function Lesson() {
 
 
     return (
-        <div onKeyDown={(e) => e.ctrlKey && e.key === "Enter" && runCode()}>
+        <div className="lesson-container">
             {/* Боковое меню */}
-            <div style={{ width: '250px', backgroundColor: 'black', padding: '20px', borderRight: '1px solid #ddd' }}>
+            <div className="lesson-sidebar">
                 {courseData && (
                     <>
                         {/* Название курса (кликабельное) */}
                         <div
-                            style={{ fontWeight: 'bold', fontSize: '18px', marginBottom: '20px', cursor: 'pointer', fontColor: 'black' }}
+                            className="course-title"
                             onClick={() => navigate(`/course/${courseData.id_course}`)}
                         >
                             {courseData.course_name}
@@ -365,16 +365,10 @@ function Lesson() {
                         {/* Список модулей */}
                         {courseData.modules.map((module) => (
 
-                            <div key={module.id_module} style={{ marginBottom: '10px' }}>
+                            <div key={module.id_module} className="module">
                                 {/* Заголовок модуля (кликабельный для разворачивания) */}
                                 <div
-                                    style={{
-                                        fontWeight: 'bold',
-                                        cursor: 'pointer',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                    }}
+                                    className="module-header"
                                     onClick={() => toggleModule(module.id_module)}
                                 >
                                     <span>{module.module_name}</span>
@@ -383,15 +377,12 @@ function Lesson() {
 
                                 {/* Уроки внутри модуля */}
                                 {openModules.includes(module.id_module) && (
-                                    <div style={{ marginLeft: '15px', marginTop: '5px' }}>
+                                    <div
+                                        className={`module-content ${openModules.includes(module.id_module) ? 'active' : ''}`}>
                                         {module.lessons.map((lesson) => (
                                             <div
                                                 key={lesson.id_lesson}
-                                                style={{
-                                                    padding: '5px 0',
-                                                    cursor: 'pointer',
-                                                    color: lesson.id_lesson === parseInt(lessonId) ? 'blue' : 'grey',
-                                                }}
+                                                className={`lesson-item ${lesson.id_lesson === parseInt(lessonId) ? 'active' : ''}`}
                                                 onClick={() => navigate(`/lesson/${lesson.id_lesson}`)}
                                             >
                                                 {lesson.lesson_name}
@@ -403,205 +394,203 @@ function Lesson() {
                         ))}
                     </>
                 )}
+                <button onClick={handleBackToCourse} className="back-button">Вернуться к курсу</button>
             </div>
-            {/* Навигационные кнопки */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-                {/* Предыдущий урок */}
-                <div style={{ textAlign: 'left' }}>
-                    {prevLesson ? (
-                        <>
-                            <div style={{ fontSize: '14px', color: '#555' }}>
-                                {prevLesson.lesson_name.length > 20 ? prevLesson.lesson_name.substring(0, 20) + '...' : prevLesson.lesson_name}
-                            </div>
-                            <button
-                                onClick={goToPreviousLesson}
-                                style={{
-                                    padding: '5px 10px',
-                                    backgroundColor: '#007bff',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '5px',
-                                    cursor: 'pointer',
-                                }}
-                            >
-                                Previous Lesson
-                            </button>
-                        </>
-                    ) : (
-                        <div style={{ width: '150px' }} /> // Плейсхолдер для выравнивания
-                    )}
-                </div>
-
-                {/* Следующий урок */}
-                <div style={{ textAlign: 'right' }}>
-                    {nextLesson ? (
-                        <>
-                            <div style={{ fontSize: '14px', color: '#555' }}>
-                                {nextLesson.lesson_name.length > 20 ? nextLesson.lesson_name.substring(0, 20) + '...' : nextLesson.lesson_name}
-                            </div>
-                            <button
-                                onClick={goToNextLesson}
-                                style={{
-                                    padding: '5px 10px',
-                                    backgroundColor: '#007bff',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '5px',
-                                    cursor: 'pointer',
-                                }}
-                            >
-                                Next Lesson
-                            </button>
-                        </>
-                    ) : (
-                        <div style={{ width: '150px' }} /> // Плейсхолдер для выравнивания
-                    )}
-                </div>
-            </div>
-            <h2>{lesson.lesson_name}</h2>
-            {lesson.lesson_type === 'теория' && (
-                <>
-                    {textMaterials.length > 0 && (
-                        <div>
-                            <h3>Text Content</h3>
-                            {textMaterials.map((material, index) => (
-                                <div key={index}>
-                                    <p>{material.content}</p>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                    {mediaMaterials.length > 0 && (
-                        <div>
-                            <h3>Media Content</h3>
-                            {mediaMaterials.map((material, index) => (
-                                <div key={index}>
-                                    {material.material_type === 'Видео' && (
-                                        <div>
-                                            <p>Video URL: {material.url}</p>
-                                            <iframe
-                                                width="600"
-                                                height="340"
-                                                src={material.url}
-                                                frameBorder="0"
-                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                allowFullScreen
-                                                title="Rutube Video"
-                                            ></iframe>
-                                        </div>
-                                    )}
-                                    {material.material_type === 'Аудио' && (
-                                        <div>
-                                            <audio controls>
-                                                <source src={material.url} type="audio/mp3" />
-                                                Your browser does not support the audio tag.
-                                            </audio>
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                    {materials.length === 0 && <p>No materials available for this lesson.</p>}
-                </>
-            )}
-            {lesson.lesson_type === 'тест' && testTask && (
-                <div>
-                    <h3>Test Task</h3>
-                    <p><strong>Task Name:</strong> {testTask.task_name}</p>
-                    <p><strong>Description:</strong> {testTask.description}</p>
-                    {Array.isArray(testTask.task_answers) && testTask.task_answers.length > 0 && (
-                        <div>
-                            <h4>Options:</h4>
-                            {testTask.task_answers.map((answer, index) => {
-                                const isMultipleChoice = Array.isArray(testTask.correct) && testTask.correct.length > 1;
-                                return (
+            <div className="lesson-content">
+                <h2>{lesson.lesson_name}</h2>
+                {lesson.lesson_type === 'теория' && (
+                    <>
+                        {textMaterials.length > 0 && (
+                            <div className="lesson-theory">
+                                {textMaterials.map((material, index) => (
                                     <div key={index}>
-                                        <input
-                                            type={isMultipleChoice ? 'checkbox' : 'radio'}
-                                            id={`answer-${index}`}
-                                            name={isMultipleChoice ? `answer-${index}` : 'answer'}
-                                            value={answer}
-                                            onChange={handleAnswerChange(answer, isMultipleChoice)}
-                                            checked={isMultipleChoice ? userAnswer.includes(answer) : userAnswer[0] === answer}
-                                        />
-                                        <label htmlFor={`answer-${index}`}>{answer}</label>
+                                        <p>{material.content}</p>
                                     </div>
-                                );
-                            })}
-                            <button onClick={handleSubmitAnswer}>Submit Answer</button>
-                            <p><strong>Correct Answer (for reference):</strong> {testTask.correct.join(', ')}</p>
-                        </div>
-                    )}
-                    {solution && (
-                        <div style={{ marginTop: '10px' }}>
-                            <p><strong>Status:</strong> <span style={{ color: solution.status === 'Завершено' ? 'green' : 'red' }}>{solution.status}</span></p>
-                            <p><strong>Your Answer:</strong> {solution.answer.join(', ')}</p>
-                            <p><strong>Score:</strong> {solution.score}%</p>
-                        </div>
-                    )}
-                    {!solution && (
-                        <div style={{ marginTop: '10px' }}>
-                            <p><strong>Status:</strong> <span style={{ color: 'gray' }}>Не начат</span></p>
-                            <p><strong>Score:</strong> 0%</p>
-                        </div>
-                    )}
-                </div>
-            )}
-            {lesson.lesson_type === 'практика' && practicalTask && (
+                                ))}
+                            </div>
+                        )}
+                        {mediaMaterials.length > 0 && (
+                            <div className="lesson-theory">
+                                {mediaMaterials.map((material, index) => (
+                                    <div key={index}>
+                                        {material.material_type === 'Видео' && (
+                                            <div>
+                                                <p>Video URL: {material.url}</p>
+                                                <iframe
+                                                    width="600"
+                                                    height="340"
+                                                    src={material.url}
+                                                    frameBorder="0"
+                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                    allowFullScreen
+                                                    title="Rutube Video"
+                                                ></iframe>
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                        {materials.length === 0 && <p>No materials available for this lesson.</p>}
+                    </>
+                )}
+                {lesson.lesson_type === 'тест' && testTask && (
+                    <div className="lesson-test">
+                        <h3>{testTask.task_name}</h3>
+                        <p>{testTask.description}</p>
+                        {Array.isArray(testTask.task_answers) && testTask.task_answers.length > 0 && (
+                            <div>
+                                <h4>Варианты ответа:</h4>
+                                {testTask.task_answers.map((answer, index) => {
+                                    const isMultipleChoice = Array.isArray(testTask.correct) && testTask.correct.length > 1;
+                                    return (
+                                        <div key={index}>
+                                            <input
+                                                type={isMultipleChoice ? 'checkbox' : 'radio'}
+                                                id={`answer-${index}`}
+                                                name={isMultipleChoice ? `answer-${index}` : 'answer'}
+                                                value={answer}
+                                                onChange={handleAnswerChange(answer, isMultipleChoice)}
+                                                checked={isMultipleChoice ? userAnswer.includes(answer) : userAnswer[0] === answer}
+                                            />
+                                            <label htmlFor={`answer-${index}`}>{answer}</label>
+                                        </div>
+                                    );
+                                })}
+                                <button onClick={handleSubmitAnswer}>Проверить</button>
+                                {/*<p><strong>Correct Answer (for reference):</strong> {testTask.correct.join(', ')}</p>*/}
+                            </div>
+                        )}
+                        {solution && (
+                            <div style={{marginTop: '10px'}}>
+                                <p><strong>Статус:</strong> <span
+                                    style={{color: solution.status === 'Завершено' ? 'green' : 'red'}}>{solution.status}</span>
+                                </p>
+                                <p><strong>Ваш ответ:</strong> {solution.answer.join(', ')}</p>
+                                <p><strong>Процент завершенности:</strong> {solution.score}%</p>
+                            </div>
+                        )}
+                        {!solution && (
+                            <div style={{marginTop: '10px'}}>
+                                <p><strong>Статус:</strong> <span style={{color: 'gray'}}>Не начат</span></p>
+                                <p><strong>Процент завершенности:</strong> 0%</p>
+                            </div>
+                        )}
+                    </div>
+                )}
+                {lesson.lesson_type === 'практика' && practicalTask && (
 
-                <div>
-                    <h3>Practical Task</h3>
-                    <p><strong>Task Name:</strong> {practicalTask.task_name}</p>
-                    <p><strong>Description:</strong> {practicalTask.description}</p>
-                    <p><strong>Language:</strong> {language.lang_name}</p>
-                    <div>
-                        <h4>Write your code:</h4>
+                    <div className="lesson-practical">
+                        <h3>Практическое задание</h3>
+                        <p><strong>Тема:</strong> {practicalTask.task_name}</p>
+                        <p><strong>Описание:</strong> {practicalTask.description}</p>
+                        <p><strong>Язык программирования:</strong> {language.lang_name}</p>
                         <div>
-                            <CodeMirror
-                                value={code}
-                                theme={sublime}
-                                height="200px"
-                                extensions={[javascript({jsx: true}), EditorView.lineWrapping]}
-                                onChange={onChange}/>
+                            <h4>Напишите ваше программное решение:</h4>
+                            <div>
+                                <CodeMirror
+                                    value={code}
+                                    theme={sublime}
+                                    height="200px"
+                                    extensions={[javascript({jsx: true}), EditorView.lineWrapping]}
+                                    onChange={onChange}/>
+                            </div>
+                            <div><Console logs={logs} variant="dark" ref={consoleRef}/></div>
+                            <button onClick={handleRunCode} style={{marginTop: '10px'}}>Запустить код</button>
+                            <button onClick={clearConsole} style={{marginTop: '10px'}}>Очистить консоль</button>
+                            <button onClick={submitSolution} style={{marginTop: '10px'}}>Проверить решение</button>
+                            {/*<button onClick={openTaskEditor} style={{marginTop: '10px'}}>Edit pr_task</button>*/}
                         </div>
-                        <div><Console logs={logs} variant="dark" ref={consoleRef}/></div>
-                        <button onClick={handleRunCode} style={{marginTop: '10px'}}>Run Code</button>
-                        <button onClick={clearConsole} style={{marginTop: '10px'}}>Clear Console</button>
-                        <button onClick={submitSolution} style={{marginTop: '10px'}}>Submit Code</button>
-                        <button onClick={openTaskEditor} style={{marginTop: '10px'}}>Edit pr_task</button>
+
+                        {solutionResult && (
+                            <div style={{marginTop: '10px'}}>
+                                <p><strong>Статус:</strong> <span
+                                    style={{color: solutionResult.status === 'Завершено' ? 'green' : 'red'}}>{solutionResult.status}</span>
+                                </p>
+                                <p><strong>Ваш ответ:</strong> {solutionResult.code_user}</p>
+                                <p><strong>Процент завершенности:</strong> {solutionResult.score}%</p>
+                            </div>
+                        )}
+                        {!solutionResult && (
+                            <div style={{marginTop: '10px'}}>
+                                <p><strong>Статус:</strong> <span style={{color: 'gray'}}>Не начат</span></p>
+                                <p><strong>Процент завершенности:</strong> 0%</p>
+                            </div>
+                        )}
+                        {isEditingTask && (
+                            <div style={{
+                                position: 'fixed',
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                background: 'rgba(0,0,0,0.5)',
+                                zIndex: 1000
+                            }}>
+                                <div style={{
+                                    background: 'white',
+                                    padding: '20px',
+                                    maxWidth: '600px',
+                                    margin: '50px auto',
+                                    borderRadius: '5px'
+                                }}>
+                                    <PracticalEditor lessonId={lesson.id_lesson} onClose={closeTaskEditor}
+                                                     onTaskUpdated={fetchPracticalTask}/>
+                                    <button onClick={closeTaskEditor} style={{marginTop: '10px'}}>Close</button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )}
+
+
+                {lesson.lesson_type !== 'теория' && lesson.lesson_type !== 'тест' && lesson.lesson_type !== 'практика' && (
+                    <p>No content available for this lesson type.</p>
+                )}
+                {/* Навигационные кнопки */}
+                <div className="lesson-nav">
+                    {/* Предыдущий урок */}
+                    <div style={{textAlign: 'left'}}>
+                        {prevLesson ? (
+                            <>
+                                <div className="nav-label">
+                                    {prevLesson.lesson_name.length > 20 ? prevLesson.lesson_name.substring(0, 20) + '...' : prevLesson.lesson_name}
+                                </div>
+                                <button
+                                    onClick={goToPreviousLesson}
+                                    className="nav-button"
+                                >
+                                    Предыдущий урок
+                                </button>
+                            </>
+                        ) : (
+                            <div style={{width: '150px'}}/> // Плейсхолдер для выравнивания
+                        )}
                     </div>
 
-                    {solutionResult && (
-                        <div style={{marginTop: '10px' }}>
-                            <p><strong>Status:</strong> <span style={{ color: solutionResult.status === 'Завершено' ? 'green' : 'red' }}>{solutionResult.status}</span></p>
-                            <p><strong>Your Answer:</strong> {solutionResult.code_user}</p>
-                            <p><strong>Score:</strong> {solutionResult.score}%</p>
-                        </div>
-                    )}
-                    {!solutionResult && (
-                        <div style={{ marginTop: '10px' }}>
-                            <p><strong>Status:</strong> <span style={{ color: 'gray' }}>Не начат</span></p>
-                            <p><strong>Score:</strong> 0%</p>
-                        </div>
-                    )}
-                    {isEditingTask && (
-                        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000 }}>
-                            <div style={{ background: 'white', padding: '20px', maxWidth: '600px', margin: '50px auto', borderRadius: '5px' }}>
-                                <PracticalEditor lessonId={lesson.id_lesson} onClose={closeTaskEditor} onTaskUpdated={fetchPracticalTask} />
-                                <button onClick={closeTaskEditor} style={{ marginTop: '10px' }}>Close</button>
-                            </div>
-                        </div>
-                    )}
+                    {/* Следующий урок */}
+                    <div style={{textAlign: 'right'}}>
+                        {nextLesson ? (
+                            <>
+                                <div className="nav-label">
+                                    {nextLesson.lesson_name.length > 20 ? nextLesson.lesson_name.substring(0, 20) + '...' : nextLesson.lesson_name}
+                                </div>
+                                <button
+                                    onClick={goToNextLesson}
+                                    className="nav-button"
+                                >
+                                    Следующий урок
+                                </button>
+                            </>
+                        ) : (
+                            <div style={{width: '150px'}}/> // Плейсхолдер для выравнивания
+                        )}
+                    </div>
                 </div>
-            )}
 
 
-            {lesson.lesson_type !== 'теория' && lesson.lesson_type !== 'тест' && lesson.lesson_type !== 'практика' && (
-                <p>No content available for this lesson type.</p>
-            )}
+            </div>
 
-            <button onClick={handleBackToCourse} style={{marginTop: '10px'}}>Back to Course</button>
         </div>
     );
 }
