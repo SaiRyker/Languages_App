@@ -16,7 +16,6 @@ export class RolesGuard implements CanActivate {
     constructor(private jwtService: JwtService, private reflector: Reflector) {
     }
 
-
     canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
         try {
             const requiredRoles = this.reflector.getAllAndOverride<string[]>(ROLES_KEY, [
@@ -43,5 +42,4 @@ export class RolesGuard implements CanActivate {
             throw new HttpException('Нет доступа', HttpStatus.FORBIDDEN);
         }
     }
-
 }
