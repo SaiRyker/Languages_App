@@ -1,4 +1,4 @@
-import {HttpException, HttpStatus, Injectable, NotFoundException} from '@nestjs/common';
+import {forwardRef, HttpException, HttpStatus, Inject, Injectable, NotFoundException} from '@nestjs/common';
 import {User} from "./user.model";
 import {InjectModel} from "@nestjs/sequelize";
 import {CreateUserDto} from "./dto/create-user.dto";
@@ -8,6 +8,7 @@ import {addRoleDto} from "../roles/dto/add-role.dto";
 import {StudentGroupsService} from "../student_groups/student_groups.service";
 import {Course} from "../courses/courses.model";
 import {StudentGroup} from "../student_groups/student_groups.model";
+import {AuthService} from "../auth/auth.service";
 
 @Injectable()
 export class UsersService {

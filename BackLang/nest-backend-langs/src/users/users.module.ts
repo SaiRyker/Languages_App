@@ -22,7 +22,6 @@ import {StudentGroupsModule} from "../student_groups/student_groups.module";
   ],
     exports: [
         UsersService,
-
     ]
 })
 export class UsersModule {}
