@@ -27,6 +27,7 @@ export class RolesGuard implements CanActivate {
             }
             const req = context.switchToHttp().getRequest();
             const authHeader = req.headers.authorization;
+            console.log(authHeader);
             const bearer = authHeader.split(' ')[0];
             const token = authHeader.split(' ')[1];
 
@@ -39,7 +40,7 @@ export class RolesGuard implements CanActivate {
             return user.roles.some(role => requiredRoles.includes(role.role_name));
         } catch (e) {
             console.log(e)
-            throw new HttpException('Нет доступа', HttpStatus.FORBIDDEN);
+            throw new HttpException('Нет доступаF', HttpStatus.FORBIDDEN);
         }
     }
 }
