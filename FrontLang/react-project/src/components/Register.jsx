@@ -5,7 +5,7 @@ import {register} from "../api/authApi.js";
 function Register() {
     const [login, setLogin] = useState('');
     const [email, setEmail] = useState('');
-    const [role, setRole] = useState('user');
+    const [role, setRole] = useState('student');
     const [fullName, setFullName] = useState('');
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
@@ -14,7 +14,13 @@ function Register() {
         e.preventDefault();
         const password = Math.random().toString(36).slice(-8); // Генерация случайного пароля
         try {
-            await register({ login, email, role, fullName, password });
+            console.log(login, email, role, fullName, password);
+            await register({
+                user_login: login,
+                user_email: email,
+                role_name: role,
+                user_fio: fullName,
+                user_password: password });
             setMessage(`Регистрация успешна! Логин: ${login}, Почта: ${email}, Пароль: ${password}`);
             alert(`Регистрация успешна!\nЛогин: ${login}\nПочта: ${email}\nПароль: ${password}`);
             setLogin('');
@@ -59,7 +65,7 @@ function Register() {
                             onChange={(e) => setRole(e.target.value)}
                             className="form-input"
                         >
-                            <option value="user">User</option>
+                            <option value="student">Student</option>
                             <option value="teacher">Teacher</option>
                             <option value="admin">Admin</option>
                         </select>
