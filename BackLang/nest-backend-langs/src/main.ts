@@ -3,6 +3,7 @@ import {AppModule} from "./app.module";
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
 import {JwtAuthGuard} from "./auth/jwt-auth.guard";
 import * as process from "node:process";
+import {UsersService} from "./users/users.service";
 
 
 async function start() {
