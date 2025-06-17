@@ -10,6 +10,8 @@ import {addCourseDto} from "./dto/add-course.dto";
 import {Course} from "../courses/courses.model";
 import {Language} from "../prog_langs/prog_langs.model";
 import {UserProgressService} from "../user_progress/user_progress.service";
+import {removeCoursesDto} from "./dto/remove-courses.dto";
+import {removeStudentsDto} from "./dto/remove-students.dto";
 
 @Injectable()
 export class StudentGroupsService {
@@ -19,8 +21,26 @@ export class StudentGroupsService {
                 private progressService: UserProgressService) {}
 
     async createStudentGroup(dto: CreateGroupDto) {
-        const group = await this.stGroupRep.create(dto);
+        const groupData = {
+            group_name: dto.group_name,
+            curator_id: dto.curator_id
+        };
+        const group = await this.stGroupRep.create(groupData);
         return group;
+    }
+
+    async getAllGroups(curatedOnly: boolean, userId: number): Promise<StudentGroup[]> {
+        const where = curatedOnly ? { curator_id: userId } : {};
+        return this.stGroupRep.findAll({
+            where,
+            include: [
+                {
+                    model: User,
+                    as: 'curator',
+                    attributes: ['id_user', 'user_fio'],
+                },
+            ],
+        });
     }
 
     async addStudentsToGroup(dto: addStudentsDto) {
@@ -83,6 +103,34 @@ export class StudentGroupsService {
             await this.progressService.createProgressForStudents(studentIds, courseId);
         }
         return group;
+    }
+
+    async removeStudentsFromGroup(dto: removeStudentsDto) {
+        console.log(dto.group_id)
+        const group = await this.stGroupRep.findByPk(dto.group_id);
+        console.log(group)
+        if (!group) {
+            throw new NotFoundException('Group not found');
+        }
+        const deleted = await this.studGroupRep.destroy({
+            where: {
+                group_id: dto.group_id,
+                student_id: dto.student_ids,
+            },
+        });
+        if (deleted === 0) {
+            throw new NotFoundException('No students found to remove');
+        }
+        return { message: 'Students removed successfully' };
+    }
+
+    async removeCoursesFromGroup(dto: removeCoursesDto) {
+        const group = await this.stGroupRep.findByPk(dto.group_id);
+        if (!group) {
+            throw new NotFoundException('Group not found');
+        }
+        await group.$remove('courses', dto.course_ids);
+        return { message: 'Courses removed successfully' };
     }
 
     async getGroupStudents(groupId: number): Promise<User[]> {
