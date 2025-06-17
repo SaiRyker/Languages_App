@@ -11,11 +11,16 @@ export class CreateCourseDto {
     @MinLength(2)
     course_name: string;
 
+    @IsInt()
+    @IsNotEmpty()
+    creator_id: number;
+
     @IsString()
     @IsOptional()
     description: string;
 
     @IsEnum(DiffLevel)
     @IsOptional()
-    diff_level?: DiffLevel;
+    diff_level: DiffLevel;
+
 }

@@ -3,16 +3,18 @@ import {Language} from "../prog_langs/prog_langs.model";
 import {CModule} from "../course_modules/course_modules.model";
 import {StudentGroup} from "../student_groups/student_groups.model";
 import {GroupCourse} from "../student_groups/group-courses.model";
+import {User} from "../users/user.model";
 
 export enum DiffLevel {
-    beginning = 'Начальный',
+    beginner = 'Начальный',
     intermediate = 'Средний',
-    professional = 'Продвинутый'
+    advanced = 'Продвинутый'
 }
 
 interface CourseCreationAttrs {
     lang_id: number;
     course_name: string;
+    creator_id: number;
     description: string;
     diff_level?: string;
 }
@@ -37,6 +39,13 @@ export class Course extends Model<Course, CourseCreationAttrs> {
 
     @Column({type: DataType.STRING, allowNull:true})
     description: string;
+
+    @ForeignKey(() => User) // Добавляем внешний ключ для связи с User
+    @Column({ type: DataType.INTEGER, allowNull: false })
+    creator_id: number;
+
+    @BelongsTo(() => User) // Связь с моделью User
+    creator: User;
 
     @HasMany(() => CModule)
     modules: CModule[]
