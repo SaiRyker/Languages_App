@@ -10,6 +10,11 @@ import PrEditor from "./components/PracticalEditor.jsx";
 import PracticalEditor from "./components/PracticalEditor.jsx";
 import Sidebar from "./components/Sidebar.jsx";
 import Register from "./components/Register.jsx";
+import CreateCourse from "./components/CreateCourse.jsx";
+import GroupsPage from "./components/GroupsPage.jsx";
+import Groups from "./components/GroupsPage.jsx";
+import GroupDetails from "./components/GroupDetails.jsx";
+import React from "react";
 
 function App() {
     const location = useLocation();
@@ -27,6 +32,9 @@ function App() {
                         <Route path="/login" element={<Login/>}/>
                         <Route path="/profile" element={<Profile/>}/>
                         <Route path="/courses" element={<Courses/>}/>
+                        <Route path="/courses/create-course" element={<CreateCourse />} />
+                        <Route path="/groups" element={<Groups/>}/>
+                        <Route path="/group/:groupId" element={<GroupDetails/>}/>
                         <Route path="/course/:courseId" element={<Course/>}/>
                         <Route path="/courses/:courseName/Modules" element={<Modules/>}/>
                         <Route path="/lesson/:lessonId" element={<Lesson/>}/>

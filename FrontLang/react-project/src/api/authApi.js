@@ -25,3 +25,19 @@ export const register = async (userData) => {
     const response = await apiClient.post('/auth/register', userData);
     return response.data;
 };
+
+export const createCourse = async (courseData) => {
+    const response = await apiClient.post('/courses/', courseData);
+    return response.data;
+};
+
+export const getLanguages = async () => {
+    const response = await apiClient.get('/languages');
+    return response.data;
+};
+
+export const createLanguage = async (languageData) => {
+    const response = await apiClient.post('/languages', languageData);
+    return response.data;
+};
+

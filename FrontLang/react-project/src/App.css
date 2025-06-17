@@ -4,28 +4,29 @@
 html, body {
     margin: 0;
     padding: 0;
-    width: 100%; /* Убедимся, что html и body занимают всю ширину */
-    overflow-x: hidden; /* Убираем горизонтальный скроллинг */
-    background-color: white; /* Цвет фона по умолчанию */
+    width: 100%;
+    overflow-x: hidden;
+    background-color: white;
 }
 
 /* Контейнер приложения */
 .app-container {
-    width: 100%; /* Занимает всю ширину экрана */
-    min-height: 100vh; /* Занимает всю высоту экрана */
+    width: 100%;
+    min-height: 100vh;
     background-color: white;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
-    box-sizing: border-box; /* Учитываем padding и border в ширине */
+    box-sizing: border-box;
 }
+
 /* Основной контейнер для содержимого */
 .main-content {
     display: flex;
-    flex: 1; /* Занимает оставшееся пространство */
-    min-height: calc(100vh - 60px); /* Учитываем высоту хедера */
-    margin-top: 60px; /* Отступ сверху, равный высоте хедера */
+    flex: 1;
+    min-height: calc(100vh - 60px);
+    margin-top: 60px;
 }
 
 /* Панель навигации */
@@ -34,13 +35,13 @@ html, body {
     background-color: #1c2526;
     border-right: 2px solid #ffffff;
     padding: 20px;
-    position: sticky; /* Движется со страницей, но остается слева */
-    top: 0; /* Смещение от верха страницы */
-    height: 600px; /* Высота с учетом header */
-    overflow-y: auto; /* Скроллинг внутри сайдбара при необходимости */
+    position: sticky;
+    top: 0;
+    height: 600px;
+    overflow-y: auto;
     z-index: 900;
-    border-radius: 8px; /* Скругленные углы для плитки */
-    margin-top: 25px; /* Отступ сверху для гармонии */
+    border-radius: 8px;
+    margin-top: 25px;
     margin-left: 10px;
 }
 
@@ -73,12 +74,12 @@ html, body {
 
 /* Контейнер содержимого с панелью */
 .content-with-sidebar {
-    margin-left: 35px; /* Увеличен отступ для разделения с сайдбаром */
+    margin-left: 35px;
     width: calc(100% - 220px);
-    padding-top: 20px; /* Уменьшен padding-top, так как отступ сверху уже в .main-content */
+    padding-top: 20px;
     display: flex;
     flex: 1;
-    min-height: 0; /* Разрешает скроллинг */
+    min-height: 0;
     background-color: white;
 }
 
@@ -346,18 +347,15 @@ html, body {
 
 /* Контейнер для страницы курсов */
 .courses-container {
-
-
     flex-direction: column;
     width: 100%;
     background-color: white;
     color: #ffffff;
-
     padding: 0;
     margin-top: 60px;
     box-sizing: border-box;
-    border-radius: 8px; /* Скругленные углы для плитки */
-    overflow: hidden; /* Убираем внутренний скроллинг */
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 /* Обертка для курсов */
@@ -369,7 +367,7 @@ html, body {
     padding: 20px;
     box-sizing: border-box;
     flex: 1;
-    background-color: #1c2526; /* Цвет фона для контраста */
+    background-color: #1c2526;
     border-radius: 8px;
 }
 
@@ -384,7 +382,7 @@ html, body {
 /* Контейнер для списка курсов */
 .courses-list {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Три карточки в ряд */
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     width: 100%;
     padding-bottom: 20px;
@@ -398,16 +396,16 @@ html, body {
     border-radius: 8px;
     padding: 20px;
     cursor: pointer;
-    transition: transform 0.2s, background-color 0.3s; /* Возвращаем анимации */
-    height: 200px; /* Фиксированная высота для равномерности */
+    transition: transform 0.2s, background-color 0.3s;
+    height: 200px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
 .course-card:hover {
-    transform: scale(1.03); /* Эффект масштабирования при наведении */
-    background-color: #2c3e50; /* Смена цвета фона при наведении */
+    transform: scale(1.03);
+    background-color: #2c3e50;
 }
 
 /* Название курса */
@@ -472,8 +470,8 @@ html, body {
 /* Контейнер для страницы курса */
 .course-container {
     min-width: 900px;
-    width: 100%; /* Адаптивная ширина */
-    min-height: 300px; /* Базовая высота */
+    width: 100%;
+    min-height: 300px;
     background-color: #1c2526;
     color: #ffffff;
     padding: 20px;
@@ -649,13 +647,13 @@ html, body {
 /* Контейнер для страницы урока */
 .lesson-container {
     display: flex;
-    flex-direction: row; /* Горизонтальное расположение сайдбара и контента */
-    width: 100%; /* Занимает всю ширину экрана */
-    min-height: calc(100vh - 45px); /* Рост вниз, без перекрытия хедера */
+    flex-direction: row;
+    width: 100%;
+    min-height: calc(100vh - 45px);
     background-color: #131b1c;
     color: #ffffff;
     padding: 20px;
-    box-sizing: border-box; /* Учитываем padding в ширине */
+    box-sizing: border-box;
     border: 2px solid #ffffff;
     border-radius: 8px;
 }
@@ -667,14 +665,14 @@ html, body {
     border-right: 2px solid #ffffff;
     padding: 20px;
     position: sticky;
-    top: 70px; /* Смещение ниже хедера и небольшого отступа */
+    top: 70px;
     height: calc(100vh - 70px);
     overflow-y: auto;
     z-index: 900;
     border-radius: 8px;
     margin-top: 25px;
     margin-left: 10px;
-    flex-shrink: 0; /* Не сжимается */
+    flex-shrink: 0;
 }
 
 /* Название курса в боковом меню */
@@ -744,8 +742,8 @@ html, body {
     padding: 15px;
     border: 2px solid #ffffff;
     border-radius: 8px;
-    width: 100%; /* Занимает всю ширину контейнера */
-    box-sizing: border-box; /* Учитываем padding в ширине */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* Навигационные кнопки */
@@ -771,12 +769,12 @@ html, body {
 
 /* Общие стили для контента урока */
 .lesson-content {
-    flex: 1; /* Занимает всё доступное пространство */
-    margin-left: 20px; /* Отступ от сайдбара */
+    flex: 1;
+    margin-left: 20px;
     display: flex;
-    flex-direction: column; /* Вертикальное расположение элементов внутри */
-    width: 100%; /* Занимает всю доступную ширину */
-    min-width: 0; /* Позволяет сжиматься, если нужно */
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
 }
 
 /* Стили для типа урока "Теория" */
@@ -786,9 +784,9 @@ html, body {
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
-    width: 100%; /* Занимает всю ширину родителя */
-    box-sizing: border-box; /* Учитываем padding в ширине */
-    min-width: 0; /* Позволяет сжиматься */
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
 }
 
 .lesson-theory h3 {
@@ -800,29 +798,29 @@ html, body {
     color: #cccccc;
     line-height: 1.6;
     margin-bottom: 15px;
-    word-break: break-word; /* Переносит длинные слова */
-    overflow-wrap: break-word; /* Переносит текст на новую строку */
-    white-space: pre-wrap; /* Отображает \n как перенос строки */
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 .lesson-theory div,
 .lesson-theory span {
-    word-break: break-word; /* Переносит длинные слова */
-    overflow-wrap: break-word; /* Переносит текст на новую строку */
-    white-space: pre-wrap; /* Отображает \n как перенос строки */
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 .lesson-theory .media-content {
     margin-top: 15px;
-    width: 100%; /* Занимает всю ширину */
+    width: 100%;
 }
 
 .lesson-theory iframe {
     border: 2px solid #ffffff;
     border-radius: 8px;
-    width: 100%; /* Занимает всю ширину */
-    height: 340px; /* Фиксированная высота для видео */
-    box-sizing: border-box; /* Учитываем border в ширине */
+    width: 100%;
+    height: 340px;
+    box-sizing: border-box;
 }
 
 .lesson-theory audio {
@@ -830,7 +828,7 @@ html, body {
     border: 2px solid #ffffff;
     border-radius: 8px;
     background-color: #2c3e50;
-    box-sizing: border-box; /* Учитываем border в ширине */
+    box-sizing: border-box;
 }
 
 /* Стили для типа урока "Тест" */
@@ -840,9 +838,9 @@ html, body {
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
-    width: 100%; /* Занимает всю ширину родителя */
-    box-sizing: border-box; /* Учитываем padding в ширине */
-    min-width: 0; /* Позволяет сжиматься */
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
 }
 
 .lesson-test h3 {
@@ -853,20 +851,20 @@ html, body {
 .lesson-test p {
     color: #cccccc;
     margin-bottom: 10px;
-    word-break: break-word; /* Переносит длинные слова */
-    overflow-wrap: break-word; /* Переносит текст на новую строку */
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .lesson-test .options {
     margin-top: 15px;
-    width: 100%; /* Занимает всю ширину */
+    width: 100%;
 }
 
 .lesson-test .options div {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
-    width: 100%; /* Занимает всю ширину */
+    width: 100%;
 }
 
 .lesson-test input[type="checkbox"],
@@ -877,9 +875,9 @@ html, body {
 
 .lesson-test label {
     color: #cccccc;
-    width: 100%; /* Занимает всю ширину */
-    word-break: break-word; /* Переносит длинные слова */
-    overflow-wrap: break-word; /* Переносит текст на новую строку */
+    width: 100%;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .lesson-test button {
@@ -901,14 +899,14 @@ html, body {
     padding: 10px;
     background-color: #2c3e50;
     border-radius: 5px;
-    width: 100%; /* Занимает всю ширину */
-    box-sizing: border-box; /* Учитываем padding в ширине */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .lesson-test .result p {
     margin: 5px 0;
-    word-break: break-word; /* Переносит длинные слова */
-    overflow-wrap: break-word; /* Переносит текст на новую строку */
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 /* Стили для типа урока "Практика" */
@@ -918,9 +916,9 @@ html, body {
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
-    width: 100%; /* Занимает всю ширину родителя */
-    box-sizing: border-box; /* Учитываем padding в ширине */
-    min-width: 0; /* Позволяет сжиматься */
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
 }
 
 .lesson-practical h3 {
@@ -931,8 +929,8 @@ html, body {
 .lesson-practical p {
     color: #cccccc;
     margin-bottom: 10px;
-    word-break: break-word; /* Переносит длинные слова */
-    overflow-wrap: break-word; /* Переносит текст на новую строку */
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .lesson-practical .code-editor {
@@ -941,8 +939,8 @@ html, body {
     border-radius: 8px;
     padding: 10px;
     background-color: #2c3e50;
-    width: 100%; /* Занимает всю ширину */
-    box-sizing: border-box; /* Учитываем padding в ширине */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .lesson-practical .console {
@@ -953,8 +951,8 @@ html, body {
     background-color: #2c3e50;
     height: 150px;
     overflow-y: auto;
-    width: 100%; /* Занимает всю ширину */
-    box-sizing: border-box; /* Учитываем padding в ширине */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .lesson-practical button {
@@ -978,14 +976,14 @@ html, body {
     padding: 10px;
     background-color: #2c3e50;
     border-radius: 5px;
-    width: 100%; /* Занимает всю ширину */
-    box-sizing: border-box; /* Учитываем padding в ширине */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .lesson-practical .result p {
     margin: 5px 0;
-    word-break: break-word; /* Переносит длинные слова */
-    overflow-wrap: break-word; /* Переносит текст на новую строку */
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 /* Стили для редактора практических заданий */
@@ -1010,8 +1008,8 @@ html, body {
     border: 2px solid #ffffff;
     border-radius: 8px;
     color: #ffffff;
-    width: 90%; /* Адаптивная ширина */
-    box-sizing: border-box; /* Учитываем padding в ширине */
+    width: 90%;
+    box-sizing: border-box;
 }
 
 /* Контейнер для страницы регистрации */
@@ -1068,79 +1066,726 @@ html, body {
     text-align: center;
 }
 
-/* Адаптивность */
+.alert {
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    color: #856404;
+}
+
+/* Новая кнопка для создания курса */
+.create-course-button {
+    padding: 12px 20px;
+    font-size: 16px;
+    background-color: #28a745;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: auto;
+    align-self: flex-start;
+}
+
+.create-course-button:hover {
+    background-color: #218838;
+}
+
+.course-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    color: #ffffff;
+    background-color: #1a1a1a;
+}
+
+.course-header {
+    margin-bottom: 20px;
+}
+
+.course-header h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.course-header p {
+    margin: 5px 0;
+}
+
+.edit-course-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.edit-course-button:hover {
+    background-color: #45a049;
+}
+
+.course-editor {
+    margin-top: 20px;
+}
+
+.add-module-form, .add-lesson-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.add-module-form input, .add-lesson-form input, .add-lesson-form select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.add-module-form button, .add-lesson-form button {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.add-module-form button:hover, .add-lesson-form button:hover {
+    background-color: #1e88e5;
+}
+
+.module-card.editable {
+    border: 1px solid #2196F3;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #2a2a2a;
+    cursor: grab;
+}
+
+.module-card.editable:active {
+    cursor: grabbing;
+}
+
+.module-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.module-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.module-actions button {
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.module-actions button:hover {
+    background-color: #fb8c00;
+}
+
+.module-actions button:last-child {
+    background-color: #f44336;
+}
+
+.module-actions button:last-child:hover {
+    background-color: #d32f2f;
+}
+
+.lesson-item.editable {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px;
+    border: 1px solid #2196F3;
+    margin-bottom: 5px;
+    cursor: grab;
+}
+
+.lesson-item.editable:active {
+    cursor: grabbing;
+}
+
+.lesson-item.editable input, .lesson-item.editable select {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.lesson-item.editable button {
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.lesson-item.editable button:hover {
+    background-color: #fb8c00;
+}
+
+.lesson-item.editable button:last-child {
+    background-color: #f44336;
+}
+
+.lesson-item.editable button:last-child:hover {
+    background-color: #d32f2f;
+}
+
+/* Стили для кнопки редактирования курса */
+.edit-course-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.edit-course-button:hover {
+    background-color: #0056b3;
+}
+
+/* Стили для редактора курса */
+.course-editor {
+    margin-top: 20px;
+}
+
+.course-editor h3 {
+    margin-bottom: 10px;
+}
+
+/* Стили для формы добавления модуля */
+.add-module-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.add-module-form input {
+    padding: 8px;
+    border: 1px solid;
+    border-radius: 4px;
+    flex: 1;
+}
+
+.add-module-form button {
+    padding: 8px 16px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.add-module-form button:hover {
+    background-color: #218838;
+}
+
+/* Стили для списка модулей */
+.modules-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Стили для карточки модуля */
+.module-card {
+    border-radius: 5px;
+    padding: 15px;
+    transition: background-color 0.2s;
+}
+
+.module-card.editable:hover {
+    /*background-color: #f1f1f1;*/
+}
+
+.module-card.expanded {
+    /*background-color: #e9ecef;*/
+}
+
+/* Стили для заголовка модуля */
+.module-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.module-order-controls {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.order-arrows {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.arrow-button {
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.arrow-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.arrow-button:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.module-order {
+    font-weight: bold;
+    width: 30px;
+}
+
+.module-name {
+    flex: 1;
+    font-size: 18px;
+}
+
+.module-toggle {
+    font-size: 20px;
+    color: #007bff;
+}
+
+/* Стили для формы добавления урока */
+.add-lesson-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.add-lesson-form input,
+.add-lesson-form select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.add-lesson-form button {
+    padding: 8px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.add-lesson-form button:hover {
+    background-color: #218838;
+}
+
+/* Стили для списка уроков */
+.lessons-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+/* Стили для элемента урока */
+.lesson-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.lesson-order-controls {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.lesson-order {
+    font-weight: bold;
+    width: 30px;
+}
+
+.lesson-link {
+    color: #007bff;
+    cursor: pointer;
+}
+
+.lesson-link:hover {
+    text-decoration: underline;
+}
+
+.lesson-name {
+    flex: 1;
+}
+
+.lesson-details {
+    color: #666;
+    font-size: 14px;
+}
+
+/* Стили для действий модуля и урока */
+.module-actions,
+.lesson-item button {
+    margin-left: 10px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.module-actions button:first-child,
+.lesson-item button:first-of-type {
+    background-color: #007bff;
+    color: white;
+}
+
+.module-actions button:first-child:hover,
+.lesson-item button:first-of-type:hover {
+    background-color: #0056b3;
+}
+
+.module-actions button:last-child,
+.lesson-item button:last-of-type {
+    background-color: #dc3545;
+    color: white;
+}
+
+.module-actions button:last-child:hover,
+.lesson-item button:last-of-type:hover {
+    background-color: #c82333;
+}
+
+/* Стили для кнопки возврата */
+.back-button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.back-button:hover {
+    background-color: #5a6268;
+}
+
+/* Стили для сообщений об ошибках и загрузке */
+.course-loading,
+.course-error,
+.course-not-found {
+    text-align: center;
+    padding: 20px;
+    color: #dc3545;
+}
+
+/* Стили для контента модуля */
+.module-content {
+    padding: 10px 0;
+}
+
+.no-lessons,
+.no-modules {
+    color: #666;
+    text-align: center;
+    margin: 10px 0;
+}
+
+/* New styles for Groups page */
+.groups-container {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 60px);
+    background-color: white;
+}
+
+.groups-wrapper {
+    background-color: #1c2526;
+    border: 2px solid #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.groups-wrapper h2 {
+    font-size: 24px;
+    color: #ffffff;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.groups-wrapper h3 {
+    font-size: 18px;
+    color: #ffffff;
+    margin-bottom: 15px;
+}
+
+.groups-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.filter-section {
+    margin-bottom: 20px;
+}
+
+.filter-section label {
+    color: #cccccc;
+    font-size: 16px;
+}
+
+.filter-section input[type="checkbox"] {
+    margin-right: 10px;
+    accent-color: #007bff;
+}
+
+.groups-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #2c3e50;
+    border: 2px solid #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.groups-table th,
+.groups-table td {
+    padding: 12px;
+    text-align: left;
+    color: #cccccc;
+    border-bottom: 1px solid #34495e;
+}
+
+.groups-table th {
+    background-color: #34495e;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.groups-table td {
+    font-size: 14px;
+}
+
+.group-row:hover {
+    background-color: #34495e;
+}
+
+.success-message {
+    color: #28a745;
+    margin-bottom: 20px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.submit-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+/* Modal styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #1c2526;
+    border: 2px solid #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 500px;
+    width: 90%;
+    color: #ffffff;
+}
+
+.modal-content h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+/* Новый стиль для кликабельного названия группы */
+.group-name-link {
+    color: #007bff;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.group-name-link:hover {
+    color: #0056b3;
+}
+
+/* Новые стили */
+.filter-section {
+    margin: 20px 0;
+}
+
+.groups-table th:first-child {
+    width: 50px; /* Фиксированная ширина для столбца с номерами */
+}
+
+/* Новые стили для списка студентов в модальном окне */
+.student-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin: 15px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.student-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.student-list li {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.student-list li:last-child {
+    border-bottom: none;
+}
+
+.student-list label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.student-list input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+}
+
+/* Новые стили для вкладок */
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.tab-button {
+    padding: 10px 20px;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.tab-button.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.tab-button:hover {
+    background-color: #e0e0e0;
+}
+
+.tab-button.active:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive styles */
 @media (max-width: 600px) {
-    /* Панель навигации */
-    .sidebar {
-        width: 150px;
+    .groups-container {
+        margin-left: 0;
+        width: 100%;
+        padding: 10px;
+    }
+
+    .groups-wrapper {
         padding: 15px;
-        top: 50px; /* Учитываем высоту хедера на мобильных */
-        height: calc(100vh - 50px); /* Учитываем высоту хедера на мобильных */
-        margin-top: 10px;
-        border-radius: 6px; /* Меньше радиус на мобильных */
+        border-radius: 6px;
     }
 
-    .lesson-container {
-        flex-direction: column; /* На мобильных сайдбар и контент располагаются вертикально */
-        padding: 15px;
-        margin-top: 50px;
-    }
-
-    .lesson-sidebar {
-        width: 100%; /* Полная ширина на мобильных */
-        position: static; /* Убираем sticky на мобильных */
-        margin: 0 0 20px 0; /* Отступ снизу */
-        height: auto; /* Высота по содержимому */
-    }
-
-    .lesson-content {
-        margin-left: 0; /* Убираем отступ от сайдбара */
-        width: 100%; /* Занимает всю ширину */
-    }
-
-    .lesson-nav {
+    .groups-actions {
         flex-direction: column;
         gap: 10px;
-        padding: 10px;
     }
 
-    .lesson-nav .nav-button {
-        width: 100%;
+    .groups-table {
+        font-size: 12px;
     }
 
-    .lesson-theory iframe {
-        width: 100%;
-        height: 200px;
+    .groups-table th,
+    .groups-table td {
+        padding: 8px;
     }
 
-    .lesson-test .options div {
+    .modal-content {
+        max-width: 90%;
+        padding: 15px;
+    }
+
+    .modal-actions {
         flex-direction: column;
-        align-items: flex-start;
+        gap: 10px;
     }
 
-    .lesson-practical .code-editor {
-        padding: 5px;
-    }
-
-    .lesson-practical .console {
-        height: 100px;
-    }
-
-    .lesson-practical .task-editor {
-        max-width: 90%;
-        margin: 20px;
-    }
-
-    .register-container {
-        padding: 10px;
-    }
-
-    .register-wrapper {
-        max-width: 90%;
-    }
-
-    .register-form {
-        padding: 20px;
-        max-width: 100%;
+    .modal-actions button {
+        width: 100%;
     }
 }
