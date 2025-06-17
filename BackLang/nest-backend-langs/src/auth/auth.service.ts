@@ -21,7 +21,7 @@ export class AuthService implements OnModuleInit {
         const user = await this.validateUser(userLoginDto);
         console.log(user)
         if (!user) {
-            throw new UnauthorizedException({message: 'Некорректные почта или парольЭЭЭ'});
+            throw new UnauthorizedException({message: 'Некорректные почта или пароль'});
         }
         return this.generateToken(user);
     }
@@ -99,13 +99,13 @@ export class AuthService implements OnModuleInit {
         if (user instanceof User) {
             const userPass = user.get("user_password");
             if (!user || !userPass) {
-                throw new UnauthorizedException({message: 'Некорректные почта или парольEEEE'});
+                throw new UnauthorizedException({message: 'Некорректные почта или пароль'});
             }
 
             if (typeof userPass === "string") {
                 const passwordEquals = await bcrypt.compare(userLoginDto.user_password, userPass);
                 if (!passwordEquals) {
-                    throw new UnauthorizedException({message: 'Некорректные почта или парольAAA'});
+                    throw new UnauthorizedException({message: 'Некорректные почта или пароль'});
                 }
             }
         }
