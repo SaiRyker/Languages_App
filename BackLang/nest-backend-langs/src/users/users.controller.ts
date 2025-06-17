@@ -24,17 +24,26 @@ export class UsersController {
     @ApiResponse({status: 200, type: User})
     @Post()
     create(@Body() userDto: CreateUserDto) {
+        console.log("Э")
         return this.usersService.createUser(userDto);
     }
 
     @ApiOperation({ summary: 'Получение всех пользователей' })
     @ApiResponse({status: 200, type: [User]})
     // @UseGuards(JwtAuthGuard)
-    @Roles("admin")
+    @Roles("teacher")
     @UseGuards(RolesGuard)
     @Get()
     getAll() {
+        console.log("Ээ")
         return this.usersService.getAllUser();
+    }
+
+    @Get("students")
+    async getAllStudents() {
+        const students = await this.usersService.getAllStudents();
+        console.log('Контроллер /users/students возвращает:', students);
+        return students;
     }
 
     @ApiOperation({ summary: 'Выдать роль' })
@@ -44,6 +53,7 @@ export class UsersController {
     @UseGuards(RolesGuard)
     @Post('/role')
     addRole(@Body() dto: addRoleDto) {
+        console.log("Эээ")
         return this.usersService.addRole(dto);
     }
 
@@ -52,10 +62,23 @@ export class UsersController {
     @UseGuards(JwtAuthGuard)
     @Get('profile')
     getProfile(@GetUser() user: any) {
+        console.log("Ээээ")
         if (!user || !user.email) {
             throw new Error('User data not found');
         }
         return this.usersService.getUserByEmail(user.email);
+    }
+
+    @ApiOperation({ summary: 'Получение пользователя по ID' })
+    @ApiResponse({ status: 200, type: User })
+    @UseGuards(JwtAuthGuard)
+    @Get(':id')
+    getUserById(@GetUser() user: any) {
+        console.log("Эээээ")
+        if (!user || !user.id) {
+            throw new Error('User data not found');
+        }
+        return this.usersService.getUserById(user.id);
     }
 
     @ApiOperation({ summary: 'Получение курсов текущего пользователя' })
@@ -63,6 +86,7 @@ export class UsersController {
     @UseGuards(JwtAuthGuard)
     @Get('profile/courses')
     async getUserCourses(@GetUser() user: any) {
+        console.log("Ээээээ")
         if (!user || !user.id) {
             throw new Error('User data not found');
         }
@@ -80,5 +104,8 @@ export class UsersController {
         }
         return this.usersService.getUserGroups(user.id);
     }
+
+
+
 
 }

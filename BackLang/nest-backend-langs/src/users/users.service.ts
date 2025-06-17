@@ -9,6 +9,8 @@ import {StudentGroupsService} from "../student_groups/student_groups.service";
 import {Course} from "../courses/courses.model";
 import {StudentGroup} from "../student_groups/student_groups.model";
 import {AuthService} from "../auth/auth.service";
+import {Language} from "../prog_langs/prog_langs.model";
+import {CoursesService} from "../courses/courses.service";
 
 @Injectable()
 export class UsersService {
@@ -36,6 +38,31 @@ export class UsersService {
         return users;
     }
 
+    async getAllStudents(): Promise<User[]> {
+        const role = await this.roleService.getRoleByValue('student');
+        if (!role) {
+            console.log('Роль "student" не найдена');
+            throw new NotFoundException('Role "student" not found');
+        }
+
+        console.log('Найдена роль "student":', role);
+
+        const students = await this.userRepository.findAll({
+            attributes: ['id_user', 'user_fio', 'user_email'],
+            include: [
+                {
+                    model: Role,
+                    where: { role_name: 'student' },
+                    attributes: [],
+                    through: { attributes: [] },
+                },
+            ],
+        });
+
+        console.log('Найдено студентов:', students.length, students);
+        return students;
+    }
+
     async getUserByEmail(user_email: string) {
 
         if (!user_email) {
@@ -47,7 +74,17 @@ export class UsersService {
         return user;
     }
 
-    async  addRole(dto: addRoleDto) {
+    async getUserById(user_id: number) {
+        if (!user_id) {
+            throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
+        }
+
+        const user = await this.userRepository.findOne({where: {id_user: user_id},
+        include: {all: true}});
+        return user;
+    }
+
+    async addRole(dto: addRoleDto) {
         const user = await this.userRepository.findByPk(dto.userId);
         const role = await this.roleService.getRoleByValue(dto.roleName);
         if (role && user) {
@@ -77,4 +114,6 @@ export class UsersService {
     async getUserGroups(user_id: number): Promise<StudentGroup[]> {
         return this.studentGroupsService.getGroupsByUserId(user_id);
     }
+
+
 }
