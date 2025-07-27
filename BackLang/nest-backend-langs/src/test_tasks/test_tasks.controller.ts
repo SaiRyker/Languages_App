@@ -1,9 +1,10 @@
-import {Body, Controller, Get, Param, Post} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Post, Put} from '@nestjs/common';
 import {TestTasksService} from "./test_tasks.service";
 import {TestTask} from "./test_tasks.model";
 import {ApiOperation, ApiResponse} from "@nestjs/swagger";
 import {CreateTaskDto} from "./dto/create-task.dto";
 import {CheckAnswerDto} from "./dto/check-answer.dto";
+import {UpdateTaskDto} from "./dto/update-task.dto";
 
 @Controller('tests')
 export class TestTasksController {
@@ -14,6 +15,20 @@ export class TestTasksController {
     @Post()
     async createTestTask(@Body() dto: CreateTaskDto): Promise<TestTask> {
         return this.testTasksService.createTestTask(dto);
+    }
+
+    @ApiOperation({ summary: 'Обновление тестового задания' })
+    @ApiResponse({ status: 200, type: TestTask })
+    @Put('taskUpd')
+    async updateTestTask(@Body() payload: UpdateTaskDto): Promise<TestTask> {
+        return this.testTasksService.updateTestTask(payload);
+    }
+
+    @ApiOperation({ summary: 'Удаление тестового задания' })
+    @ApiResponse({ status: 200, description: 'Тестовое задание успешно удалено' })
+    @Delete(':id')
+    async deleteTestTask(@Param('id') id: number): Promise<void> {
+        return this.testTasksService.deleteTestTask(id);
     }
 
     @ApiOperation({ summary: 'Получение всех тестовых заданий по ID курса' })

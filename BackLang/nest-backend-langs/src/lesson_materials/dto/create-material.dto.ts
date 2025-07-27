@@ -1,5 +1,5 @@
 import {mType} from "../lesson_materials.model";
-import {IsNotEmpty, IsNumber, IsString} from "class-validator";
+import {IsInt, IsNotEmpty, IsNumber, IsOptional, IsString} from "class-validator";
 
 
 export class CreateMaterialDto {
@@ -11,8 +11,15 @@ export class CreateMaterialDto {
     material_type: mType;
 
     @IsString()
-    @IsNotEmpty()
     content: string;
+
+    @IsInt()
+    @IsNotEmpty()
+    order_number: number;
+
+    @IsOptional()
+    @IsString()
+    title?: string;
 
     @IsString()
     url?: string;

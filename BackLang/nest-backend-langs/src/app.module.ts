@@ -38,6 +38,8 @@ import {StudentGroup} from "./student_groups/student_groups.model";
 import {GroupStudent} from "./student_groups/group-students.model";
 import {Progress} from "./user_progress/user_progress.model";
 import {GroupCourse} from "./student_groups/group-courses.model";
+import {UserLessonStatus} from "./lessons/user_lesson_status.model";
+import {UserLessonStatusModule} from "./lessons/user_lesson_status.module";
 
 @Module({
     controllers: [],
@@ -54,7 +56,7 @@ import {GroupCourse} from "./student_groups/group-courses.model";
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
             models: [User, Role, UserRoles, Notification, SuppReqs, SuppResps, Language, Course, CModule, Lesson, Material,
-            TestTask, TSolution, PrTask, PrSolution, StudentGroup, GroupStudent, Progress, GroupCourse],
+            TestTask, TSolution, PrTask, PrSolution, StudentGroup, GroupStudent, Progress, GroupCourse, UserLessonStatus],
             autoLoadModels: true,
             synchronize: true
         }),
@@ -75,6 +77,7 @@ import {GroupCourse} from "./student_groups/group-courses.model";
         PrSolutionsModule,
         UserProgressModule,
         StudentGroupsModule,
+        UserLessonStatusModule
     ],
 })
 export class AppModule {}

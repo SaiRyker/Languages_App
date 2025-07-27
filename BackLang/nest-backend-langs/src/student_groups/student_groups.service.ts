@@ -68,7 +68,7 @@ export class StudentGroupsService {
                 });
                 const courseIds = groupCourses.map(c => c.get("course_id"));
                 for (const courseId of courseIds) {
-                    await this.progressService.createProgressForStudent(studId, courseId);
+                    await this.progressService.createProgressForStudent(studId, Number(courseId));
                 }
             }
             return group;

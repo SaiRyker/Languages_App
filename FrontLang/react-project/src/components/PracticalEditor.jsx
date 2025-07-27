@@ -1,119 +1,169 @@
-import React, { useState, useEffect } from 'react';
-import { getPrTaskByLessonId, updatePrTask } from '../api/userApi'; // Укажи правильный путь к userApi
+import { useState, useEffect } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { sublime } from '@uiw/codemirror-theme-sublime';
 import { EditorView } from '@codemirror/view';
+import { getLanguages } from '../api/userApi';
 
-const PracticalEditor = ({ lessonId, onClose, onTaskUpdated }) => {
-    const [taskName, setTaskName] = useState('');
-    const [description, setDescription] = useState('');
-    const [testCode, setTestCode] = useState('');
-    const [languageId, setLanguageId] = useState('javascript');
-    const [taskId, setTaskId] = useState(null); // Храним taskId для обновления
-    const [loading, setLoading] = useState(true);
+function PracticalEditor({ practicalTask, lessonId, onSave, onCancel, onDelete }) {
+    const [editedTask, setEditedTask] = useState({
+        id_pr_task: practicalTask?.id_pr_task || null,
+        lesson_id: lessonId,
+        task_name: practicalTask?.task_name || '',
+        description: practicalTask?.description || '',
+        test_code: practicalTask?.test_code || '',
+        language_id: practicalTask?.language_id || '',
+    });
+    const [languages, setLanguages] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // Загрузка данных задания при монтировании
     useEffect(() => {
-        const fetchTask = async () => {
+        const fetchLanguages = async () => {
             try {
-                const task = await getPrTaskByLessonId(lessonId);
-                if (!task) {
-                    throw new Error('Task not found for this lesson');
+                const langs = await getLanguages();
+                setLanguages(langs);
+                if (langs.length > 0 && !editedTask.language_id) {
+                    setEditedTask((prev) => ({ ...prev, language_id: langs[0].id_lang }));
                 }
-                setTaskId(task.id_pr_task);
-                setTaskName(task.task_name);
-                setDescription(task.description);
-                setTestCode(task.test_code);
-                setLanguageId(task.language_id);
             } catch (err) {
-                setError('Failed to load task data');
-                console.error('Error fetching task:', err);
-            } finally {
-                setLoading(false);
+                console.error('Ошибка загрузки языков:', err);
+                setError('Не удалось загрузить список языков');
             }
         };
+        fetchLanguages();
+    }, []);
 
-        fetchTask();
-    }, [lessonId]);
+    const handleTaskNameChange = (e) => {
+        setEditedTask({ ...editedTask, task_name: e.target.value });
+    };
 
-    const handleSaveTask = async () => {
-        try {
-            const response = await updatePrTask(taskId, {
-                task_name: taskName,
-                description,
-                test_code: testCode,
-                language_id: languageId,
-                lesson_id: lessonId,
-            });
-            console.log('Task updated:', response);
-            if (onTaskUpdated && typeof onTaskUpdated === 'function') {
-                onTaskUpdated(); // Вызываем обновление данных
+    const handleDescriptionChange = (e) => {
+        setEditedTask({ ...editedTask, description: e.target.value });
+    };
+
+    const handleTestCodeChange = (value) => {
+        setEditedTask({ ...editedTask, test_code: value });
+    };
+
+    const handleLanguageIdChange = (e) => {
+        setEditedTask({ ...editedTask, language_id: parseInt(e.target.value) });
+    };
+
+    const handleSubmit = () => {
+        if (!editedTask.task_name.trim()) {
+            alert('Название задания обязательно');
+            return;
+        }
+        if (!editedTask.description.trim()) {
+            alert('Описание задания обязательно');
+            return;
+        }
+        if (!editedTask.test_code.trim()) {
+            alert('Тестовый код обязателен');
+            return;
+        }
+        if (!editedTask.language_id) {
+            alert('Язык программирования обязателен');
+            return;
+        }
+
+        console.log('Отправка данных:', editedTask);
+        onSave(editedTask);
+    };
+
+    const handleDelete = () => {
+        if (!editedTask.id_pr_task) {
+            alert('Нет задачи для удаления');
+            return;
+        }
+        if (window.confirm('Вы уверены, что хотите удалить практическое задание?')) {
+            if (typeof onDelete === 'function') {
+                onDelete(editedTask.id_pr_task);
+            } else {
+                console.error('onDelete is not a function');
+                alert('Ошибка: функция удаления не определена');
             }
-            if (onClose && typeof onClose === 'function') {
-                onClose(); // Закрываем редактор
-            }
-        } catch (error) {
-            console.error('Error updating task:', error);
-            setError('Failed to update task');
         }
     };
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div style={{ color: 'red' }}>{error}</div>;
-
     return (
-        <div style={{ padding: '20px', backgroundColor: '#000000' }}>
-            <h2>Edit Task</h2>
+        <div style={{ position: 'relative', padding: '20px' }}>
+            <h3>Редактирование практического задания</h3>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {loading && <p>Загрузка...</p>}
             <div>
-                <label>
-                    Task Name:
-                    <input
-                        type="text"
-                        value={taskName}
-                        onChange={(e) => setTaskName(e.target.value)}
-                        style={{ width: '100%', marginBottom: '10px' }}
-                    />
-                </label>
+                <label>Название задания:</label>
+                <input
+                    type="text"
+                    value={editedTask.task_name}
+                    onChange={handleTaskNameChange}
+                    style={{ width: '100%', marginBottom: '10px' }}
+                />
             </div>
             <div>
-                <label>
-                    Description:
-                    <textarea
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        rows={4}
-                        style={{ width: '100%', marginBottom: '10px' }}
-                    />
-                </label>
+                <label>Описание:</label>
+                <textarea
+                    value={editedTask.description}
+                    onChange={handleDescriptionChange}
+                    style={{ width: '100%', height: '100px', marginBottom: '10px' }}
+                />
             </div>
             <div>
-                <label>
-                    Language:
-                    <input
-                        type="text"
-                        value={languageId}
-                        onChange={(e) => setLanguageId(e.target.value)}
-                        style={{ width: '100%', marginBottom: '10px' }}
-                    />
-                </label>
+                <label>Язык программирования:</label>
+                <select
+                    value={editedTask.language_id}
+                    onChange={handleLanguageIdChange}
+                    style={{ width: '100%', marginBottom: '10px' }}
+                    disabled={languages.length === 0}
+                >
+                    {languages.length === 0 && (
+                        <option value="">Загрузка языков...</option>
+                    )}
+                    {languages.map((lang) => (
+                        <option key={lang.id_lang} value={lang.id_lang}>
+                            {lang.lang_name}
+                        </option>
+                    ))}
+                </select>
             </div>
             <div>
-                <h4>Test Code (Jest):</h4>
+                <h4>Тестовый код (Jest):</h4>
                 <CodeMirror
-                    value={testCode}
+                    value={editedTask.test_code}
                     theme={sublime}
                     height="150px"
                     extensions={[javascript({ jsx: true }), EditorView.lineWrapping]}
-                    onChange={(value) => setTestCode(value)}
+                    onChange={handleTestCodeChange}
                 />
             </div>
-            <button onClick={handleSaveTask} style={{ marginTop: '10px' }}>
-                Save Changes
-            </button>
+            <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between' }}>
+                <div>
+                    <button onClick={handleSubmit} style={{ marginRight: '10px' }} disabled={loading}>
+                        Сохранить
+                    </button>
+                    <button onClick={onCancel} disabled={loading}>
+                        Отмена
+                    </button>
+                </div>
+                {editedTask.id_pr_task && (
+                    <button
+                        onClick={handleDelete}
+                        style={{
+                            backgroundColor: '#ff4d4f',
+                            color: 'white',
+                            border: 'none',
+                            padding: '8px 16px',
+                            cursor: 'pointer',
+                        }}
+                        disabled={loading}
+                    >
+                        Удалить задание
+                    </button>
+                )}
+            </div>
         </div>
     );
-};
+}
 
 export default PracticalEditor;

@@ -68,13 +68,13 @@ function Profile() {
                     }
                     <div className="profile-actions">
                         <button
-                            className="action-button courses-button"
+                            className="action-button-profile courses-button"
                             onClick={() => navigate('/courses')}
                         >
                             Мои курсы
                         </button>
                         <button
-                            className="action-button logout-button"
+                            className="action-button-profile logout-button"
                             onClick={() => {
                                 localStorage.removeItem('token');
                                 navigate('/login');

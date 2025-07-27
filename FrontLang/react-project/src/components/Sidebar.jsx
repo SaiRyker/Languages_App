@@ -36,6 +36,8 @@ function Sidebar() {
     const isCoursesActive = location.pathname === '/courses';
     const isRegisterActive = location.pathname === '/register';
     const isCourseActive = location.pathname === `/course/${courseId}`;
+    const isProgressActive = location.pathname === `/user-progress`;
+
 
     return (
         <div className="sidebar">
@@ -66,6 +68,11 @@ function Sidebar() {
                         className={`sidebar-link ${location.pathname === '/groups' ? 'active' : ''}`}
                     >
                         Группы
+                    </Link>
+                )}
+                {isAdminOrTeacher && (
+                    <Link to="/user-progress" className={`sidebar-link ${isProgressActive ? 'active' : ''}`}>
+                        Прогресс пользователей
                     </Link>
                 )}
                 {courseId && (

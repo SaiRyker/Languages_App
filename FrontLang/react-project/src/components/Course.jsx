@@ -217,6 +217,7 @@ function Course() {
     const { roles, id: userId } = getUserData();
     const isAdmin = roles.some((role) => role.role_name === 'admin');
     const isTeacher = roles.some((role) => role.role_name === 'teacher');
+    console.log("Учитель?", isTeacher);
     const canEdit = isAdmin || (isTeacher && course?.creator_id === userId);
 
     useEffect(() => {
@@ -239,6 +240,8 @@ function Course() {
                 setCourse(courseData);
 
                 const teacherData = await getUserById(courseData.creator_id);
+                // console.log(courseData.creator_id)
+                // console.log(teacherData);
                 if (!teacherData || typeof teacherData !== 'object') {
                     throw new Error('Invalid teacher data received');
                 }

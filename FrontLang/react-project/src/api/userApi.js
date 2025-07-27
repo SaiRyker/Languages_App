@@ -111,18 +111,6 @@ export const getUserSolutionsByUserId = async (userId) => {
     return response.data;
 };
 
-export const getPrTaskByLessonId = async (lesson_id) => {
-    const apiClient = createApiClient();
-    const response = await apiClient.get(`/practicals/lesson/${lesson_id}`);
-    return response.data;
-};
-
-export const updatePrTask = async (taskId, data) => {
-    const apiClient = createApiClient();
-    const response = await apiClient.put(`/practicals/${taskId}`, data);
-    return response.data;
-};
-
 export const getUserPrSolution = async (prTask_id, student_id) => {
     const apiClient = createApiClient();
     const response = await apiClient.get(`/prsolutions/${prTask_id}/${student_id}`);
@@ -300,4 +288,302 @@ export const removeCoursesFromGroup = async (dto) => {
         console.error('Ошибка removeCoursesFromGroup:', error.response?.data || error.message);
         throw error;
     }
+};
+
+// New functions
+// export const updateLesson = async (lessonId, dto) => {
+//     const apiClient = createApiClient();
+//     try {
+//         console.log('Запрос updateLesson для lessonId:', lessonId, 'dto:', dto);
+//         const response = await apiClient.put(`/lessons/${lessonId}`, dto);
+//         console.log('Ответ updateLesson:', response.data);
+//         return response.data;
+//     } catch (error) {
+//         console.error('Ошибка updateLesson:', error.response?.data || error.message);
+//         throw error;
+//     }
+// };
+
+export const createMaterial = async (dto) => {
+    const apiClient = createApiClient();
+    try {
+        console.log('Запрос createMaterial:', dto);
+        const response = await apiClient.post('/lmaterials', dto);
+        console.log('Ответ createMaterial:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Ошибка createMaterial:', error.response?.data || error.message);
+        throw error;
+    }
+};
+
+export const updateMaterial = async (materialId, dto) => {
+    const apiClient = createApiClient();
+    try {
+        console.log('Запрос updateMaterial для materialId:', materialId, 'dto:', dto);
+        const response = await apiClient.put(`/lmaterials/${materialId}`, dto);
+        console.log('Ответ updateMaterial:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Ошибка updateMaterial:', error.response?.data || error.message);
+        throw error;
+    }
+};
+
+export const updateMaterialOrder = async (lessonId, dto) => {
+    const apiClient = createApiClient();
+    try {
+        console.log('Запрос updateMaterialOrder для lessonId:', lessonId, 'dto:', dto);
+        const response = await apiClient.put(`/lmaterials/lesson/${lessonId}/order`, dto);
+        console.log('Ответ updateMaterialOrder:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Ошибка updateMaterialOrder:', error.response?.data || error.message);
+        throw error;
+    }
+};
+
+export const deleteMaterial = async (materialId) => {
+    const apiClient = createApiClient();
+    try {
+        console.log('Запрос deleteMaterial для materialId:', materialId);
+        const response = await apiClient.delete(`/lmaterials/${materialId}`);
+        console.log('Ответ deleteMaterial:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Ошибка deleteMaterial:', error.response?.data || error.message);
+        throw error;
+    }
+};
+
+// userApi.js
+export const createTestTask = async (testData) => {
+    try {
+        const apiClient = createApiClient();
+        console.log('Создание тестового задания:', testData);
+        const response = await apiClient.post('/tests', testData);
+        console.log('Ответ сервера:', { status: response.status, statusText: response.statusText });
+        const data = response.data;
+        console.log('Успешный ответ:', data);
+        return data;
+    } catch (error) {
+        console.error('Ошибка в createTestTask:', error.response?.data || error.message);
+        throw error;
+    }
+};
+
+export const updateTestTask = async (testData) => {
+    try {
+        const apiClient = createApiClient();
+        console.log('Обновление тестового задания:', testData);
+        const response = await apiClient.put('/tests/taskUpd', testData); // Исправлен маршрут
+        console.log('Ответ сервера:', { status: response.status, statusText: response.statusText });
+        const data = response.data;
+        console.log('Успешный ответ:', data);
+        return data;
+    } catch (error) {
+        console.error('Ошибка в updateTestTask:', error.response?.data || error.message);
+        throw error;
+    }
+};
+
+export const deleteTestTask = async (id) => {
+    try {
+        const apiClient = createApiClient();
+        console.log('Удаление тестового задания:', id);
+        const response = await apiClient.delete(`/tests/${id}`);
+        console.log('Ответ сервера:', { status: response.status, statusText: response.statusText });
+        const data = response.data;
+        console.log('Успешный ответ:', data);
+        return data;
+    } catch (error) {
+        console.error('Ошибка в deleteTestTask:', error.response?.data || error.message);
+        throw error;
+    }
+};
+
+
+
+
+export const createPrTask = async (taskData) => {
+    try {
+        const apiClient = createApiClient();
+        console.log('Создание практического задания:', taskData);
+        const response = await apiClient.post('/practicals', taskData);
+        console.log('Ответ сервера:', { status: response.status, statusText: response.statusText });
+        const data = response.data;
+        console.log('Успешный ответ:', data);
+        return data;
+    } catch (error) {
+        console.error('Ошибка в createPrTask:', error.response?.data || error.message);
+        throw error;
+    }
+};
+
+export const updatePrTask = async (taskData) => {
+    try {
+        const apiClient = createApiClient();
+        console.log('Обновление практического задания:', taskData);
+        const response = await apiClient.put('/practicals', taskData);
+        console.log('Ответ сервера:', { status: response.status, statusText: response.statusText });
+        const data = response.data;
+        console.log('Успешный ответ:', data);
+        return data;
+    } catch (error) {
+        console.error('Ошибка в updatePrTask:', error.response?.data || error.message);
+        throw error;
+    }
+};
+
+export const deletePrTask = async (id) => {
+    try {
+        const apiClient = createApiClient();
+        console.log('Удаление практического задания:', { id });
+        const response = await apiClient.delete(`/practicals/${id}`);
+        console.log('Ответ сервера:', { status: response.status, statusText: response.statusText });
+        const data = response.data;
+        console.log('Успешный ответ:', data);
+        return data;
+    } catch (error) {
+        console.error('Ошибка в deletePrTask:', error.response?.data || error.message);
+        throw error;
+    }
+};
+
+export const getPrTaskByLessonId = async (lesson_id) => {
+    const apiClient = createApiClient();
+    const response = await apiClient.get(`/practicals/lesson/${lesson_id}`);
+    return response.data;
+};
+
+export const getLanguages = async () => {
+    try {
+        const apiClient = createApiClient();
+        const response = await apiClient.get('/languages');
+        console.log('Ответ getLanguages:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Ошибка в getLanguages:', error.response?.data || error.message);
+        throw error;
+    }
+};
+
+export const getProgressByCreator = async (creatorId, courseId = null) => {
+    try {
+        const apiClient = createApiClient();
+        const params = courseId ? { courseId } : {};
+        const response = await apiClient.get(`/user-progress/creator/${creatorId}`, { params });
+        console.log('Ответ getProgressByCreator:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Ошибка в getProgressByCreator:', error.response?.data || error.message);
+        throw error;
+    }
+};
+
+export const getProgressByStudentAndCourse = async (studentId, courseId) => {
+    try {
+        const apiClient = createApiClient();
+        const response = await apiClient.get(`/user-progress/${studentId}/${courseId}`);
+        console.log('Ответ getProgressByStudentAndCourse:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Ошибка в getProgressByStudentAndCourse:', error.response?.data || error.message);
+        throw error;
+    }
+};
+
+
+
+export const getLessonStatus = async (userId, lessonId) => {
+    const apiClient = createApiClient();
+    try {
+        console.log(`Sending GET request to /api/lessonStatus?userId=${userId}&lessonId=${lessonId}`);
+        const response = await apiClient.get(`/lessonStatus`, {
+            params: { userId, lessonId },
+        });
+        console.log(`Received response: ${JSON.stringify(response.data)}`);
+        return response.data;
+    } catch (error) {
+        const errorDetails = error.response
+            ? `Status: ${error.response.status}, Data: ${JSON.stringify(error.response.data)}`
+            : `Message: ${error.message}`;
+        console.error(`Error in getLessonStatus for lesson ${lessonId}: ${errorDetails}`);
+        throw error;
+    }
+};
+
+export const createLessonStatus = async (userId, lessonId, status) => {
+    const apiClient = createApiClient();
+    try {
+        console.log(`Sending POST request to /api/lessonStatus for user ${userId}, lesson ${lessonId}, status: ${status}`);
+        const response = await apiClient.post('/lessonStatus', { user_id: userId, lesson_id: lessonId, status });
+        console.log(`Create response: ${JSON.stringify(response.data)}`);
+        return response.data;
+    } catch (error) {
+        const errorDetails = error.response
+            ? `Status: ${error.response.status}, Data: ${JSON.stringify(error.response.data)}`
+            : `Message: ${error.message}`;
+        console.error(`Error in createLessonStatus for lesson ${lessonId}: ${errorDetails}`);
+        throw error;
+    }
+};
+
+export const updateLessonStatus = async (lessonId, status) => {
+    const apiClient = createApiClient();
+    try {
+        console.log(`Sending PUT request to /api/lessonStatus/${lessonId} with status ${status}`);
+        const response = await apiClient.put(`/lessonStatus/${lessonId}`, { status });
+        console.log(`Update response: ${JSON.stringify(response.data)}`);
+        return response.data;
+    } catch (error) {
+        console.error(`Error updating lesson status: ${error.response?.data || error.message}`);
+        throw error;
+    }
+};
+
+export const getLessonStatusesForModule = async (userId, moduleId) => {
+    const apiClient = createApiClient();
+    try {
+        console.log(`Sending GET request to /api/lessonStatus/module?userId=${userId}&moduleId=${moduleId}`);
+        const response = await apiClient.get(`/lessonStatus/module`, {
+            params: { userId, moduleId },
+        });
+        console.log(`Received response: ${JSON.stringify(response.data)}`);
+        return response.data;
+    } catch (error) {
+        const errorDetails = error.response
+            ? `Status: ${error.response.status}, Data: ${JSON.stringify(error.response.data)}`
+            : `Message: ${error.message}`;
+        console.error(`Error in getLessonStatusesForModule for module ${moduleId}: ${errorDetails}`);
+        throw error;
+    }
+};
+
+
+
+
+
+export const getUserNotifications = async (userId) => {
+    const apiClient = createApiClient();
+    const response = await apiClient.get(`/user_notifications/user/${userId}`);
+    return response.data;
+};
+
+export const markNotificationAsRead = async (notificationId) => {
+    const apiClient = createApiClient();
+    const response = await apiClient.patch(`/user_notifications/${notificationId}/read`);
+    return response.data;
+};
+
+export const getAllUsers = async () => {
+    const apiClient = createApiClient();
+    const response = await apiClient.get('/user_notifications/users');
+    return response.data;
+};
+
+export const sendBulkNotification = async (dto) => {
+    const apiClient = createApiClient();
+    const response = await apiClient.post('/user_notifications/bulk', dto);
+    return response.data;
 };

@@ -212,7 +212,7 @@ const GroupDetails = () => {
                 <h2>Детали группы</h2>
                 <div className="groups-actions">
                     <h3>Добавить студентов</h3>
-                    <button className="submit-button" onClick={() => setShowAddModal(true)}>
+                    <button className="submit-button edit-button" onClick={() => setShowAddModal(true)}>
                         Выбрать студентов
                     </button>
                     <button

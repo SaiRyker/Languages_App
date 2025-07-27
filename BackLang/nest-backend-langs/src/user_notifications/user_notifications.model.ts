@@ -1,4 +1,4 @@
-import {BelongsTo, BelongsToMany, Column, DataType, ForeignKey, Model, Table} from "sequelize-typescript";
+import {BelongsTo, Column, DataType, ForeignKey, Model, Table} from "sequelize-typescript";
 import {User} from "../users/user.model";
 
 export enum NotificationStatus {
@@ -8,6 +8,8 @@ export enum NotificationStatus {
 
 interface NotificationCreationAttrs {
     user_id: number;
+    creator_id: number;
+    title: string;
     content: string;
 }
 
@@ -25,26 +27,35 @@ interface NotificationCreationAttrs {
             }
         }
     }
-
 })
 export class Notification extends Model<Notification, NotificationCreationAttrs> {
     @Column({type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true})
     id_notification: number;
 
     @ForeignKey(() => User)
-    @Column({type: DataType.INTEGER, allowNull:false})
+    @Column({type: DataType.INTEGER, allowNull: false})
     user_id: number;
 
     @BelongsTo(() => User)
-    user: User
+    user: User;
 
-    @Column({type: DataType.TEXT, allowNull:false})
+    @ForeignKey(() => User)
+    @Column({type: DataType.INTEGER, allowNull: false})
+    creator_id: number;
+
+    @BelongsTo(() => User, { foreignKey: 'creator_id', as: 'creator' })
+    creator: User;
+
+    @Column({type: DataType.STRING, allowNull: false})
+    title: string;
+
+    @Column({type: DataType.TEXT, allowNull: false})
     content: string;
 
-    @Column({type: DataType.DATE, allowNull:false, defaultValue:DataType.NOW})
+    @Column({type: DataType.DATE, allowNull: false, defaultValue: DataType.NOW})
     sent_date: Date;
 
-    @Column({type: DataType.ENUM(NotificationStatus.UNREAD, NotificationStatus.READ), allowNull:false,
+    @Column({type: DataType.ENUM(NotificationStatus.UNREAD, NotificationStatus.READ), allowNull: false,
         defaultValue: NotificationStatus.UNREAD})
     status: NotificationStatus;
 }

@@ -15,6 +15,9 @@ import GroupsPage from "./components/GroupsPage.jsx";
 import Groups from "./components/GroupsPage.jsx";
 import GroupDetails from "./components/GroupDetails.jsx";
 import React from "react";
+import TestEditor from "./components/TestEditor.jsx";
+import UserProgress from "./components/UserProgress.jsx";
+import NotificationsPage from "./components/NotificationPage.jsx";
 
 function App() {
     const location = useLocation();
@@ -38,7 +41,10 @@ function App() {
                         <Route path="/course/:courseId" element={<Course/>}/>
                         <Route path="/courses/:courseName/Modules" element={<Modules/>}/>
                         <Route path="/lesson/:lessonId" element={<Lesson/>}/>
+                        <Route path="/lesson/:lessonId/testEditor" element={<TestEditor/>}/>
                         <Route path="/pr-task/:prTaskId" element={<PracticalEditor/>}/>
+                        <Route path="/user-progress" element={<UserProgress />} />
+                        <Route path="/notifications/:userId" element={<NotificationsPage />} />
                         <Route path="/register" element={<Register/>}/>
                         <Route path="/" element={<Login/>}/>
                     </Routes>

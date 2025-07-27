@@ -53,6 +53,7 @@ export class CoursesService {
 
         // Создаём курс
         try {
+            console.log(dto)
             const course = await this.courseRep.create({ ...dto, creator_id: userId });
             return course;
         } catch (e) {
@@ -111,7 +112,9 @@ export class CoursesService {
                 },
                 {
                     model: CModule,
-                    include: [{model: Lesson}]
+                    include: [{model: Lesson, attributes: ['id_lesson', 'lesson_name', 'lesson_type', 'order_number'],
+                        order: [['order_number', 'ASC']]}],
+                    order: [['order_number', 'ASC']],
                 }
             ],
         });

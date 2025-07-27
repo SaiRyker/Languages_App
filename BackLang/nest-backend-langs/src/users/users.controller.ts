@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Post, Req, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, Req, UseGuards} from '@nestjs/common';
 import {CreateUserDto} from "./dto/create-user.dto";
 import {UsersService} from "./users.service";
 import {ApiOperation, ApiResponse} from "@nestjs/swagger";
@@ -22,20 +22,21 @@ export class UsersController {
 
     @ApiOperation({ summary: 'Создание пользователя' })
     @ApiResponse({status: 200, type: User})
+    @UseGuards(JwtAuthGuard)
+    @Roles("admin")
+    @UseGuards(RolesGuard)
     @Post()
     create(@Body() userDto: CreateUserDto) {
-        console.log("Э")
         return this.usersService.createUser(userDto);
     }
 
     @ApiOperation({ summary: 'Получение всех пользователей' })
     @ApiResponse({status: 200, type: [User]})
-    // @UseGuards(JwtAuthGuard)
-    @Roles("teacher")
+    @UseGuards(JwtAuthGuard)
+    @Roles("teacher", "admin")
     @UseGuards(RolesGuard)
     @Get()
     getAll() {
-        console.log("Ээ")
         return this.usersService.getAllUser();
     }
 
@@ -72,13 +73,14 @@ export class UsersController {
     @ApiOperation({ summary: 'Получение пользователя по ID' })
     @ApiResponse({ status: 200, type: User })
     @UseGuards(JwtAuthGuard)
-    @Get(':id')
-    getUserById(@GetUser() user: any) {
+    @Get(':userId')
+    getUserById(@Param('userId') userId: number) {
         console.log("Эээээ")
-        if (!user || !user.id) {
+        if (!userId) {
             throw new Error('User data not found');
         }
-        return this.usersService.getUserById(user.id);
+        console.log(userId)
+        return this.usersService.getUserById(Number(userId));
     }
 
     @ApiOperation({ summary: 'Получение курсов текущего пользователя' })

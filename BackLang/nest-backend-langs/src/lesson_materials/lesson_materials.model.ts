@@ -3,14 +3,15 @@ import {Lesson} from "../lessons/lessons.model";
 
 export enum mType {
     pText = 'Текст',
-    pAudio = 'Аудио',
-    pVideo = 'Видео'
+    pVideo = 'Видео',
+    pImage = 'Изображение'
 }
 
 interface MaterialCreationAttrs {
     lesson_id: number;
     material_type: mType;
     content: string;
+    order_number: number;
     url?: string;
 }
 
@@ -29,8 +30,14 @@ export class Material extends Model<Material, MaterialCreationAttrs> {
     @Column({type: DataType.ENUM(...Object.values(mType)), allowNull:false, defaultValue: mType.pText})
     material_type: mType;
 
+    @Column({ type: DataType.STRING, allowNull: true })
+    title: string;
+
     @Column({type: DataType.TEXT, allowNull:true})
     content: string;
+
+    @Column({ type: DataType.INTEGER, allowNull: false, defaultValue: 0 })
+    order_number: number;
 
     @Column({type: DataType.STRING, allowNull:true})
     url: string;

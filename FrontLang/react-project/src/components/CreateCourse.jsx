@@ -75,6 +75,9 @@ function CreateCourse() {
                 lang_id: Number(language),
                 description: description,
             };
+            console.log(DiffLevel.beginner)
+            console.log(diffLevel)
+            console.log(courseData)
             await createCourse(courseData);
             setMessage(`Курс "${courseName}" успешно создан!`);
             alert(`Курс "${courseName}" успешно создан!`);

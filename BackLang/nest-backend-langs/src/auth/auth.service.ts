@@ -1,19 +1,24 @@
-import {HttpException, HttpStatus, Injectable, UnauthorizedException, OnModuleInit} from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable, UnauthorizedException, OnModuleInit, Logger} from '@nestjs/common';
 import {CreateUserDto} from "../users/dto/create-user.dto";
 import {UsersService} from "../users/users.service";
 import {JwtService} from "@nestjs/jwt";
 import * as bcrypt from "bcryptjs";
 import {User} from "../users/user.model";
 import {LoginUserDto} from "../users/dto/login-user.dto";
+import {Role} from "../roles/roles.model";
+import {InjectModel} from "@nestjs/sequelize";
 
 @Injectable()
 export class AuthService implements OnModuleInit {
+    private readonly logger = new Logger(AuthService.name);
 
-    constructor(private usersService: UsersService,
+    constructor(@InjectModel(Role) private roleRepository: typeof Role,
+        private usersService: UsersService,
                 private jwtService: JwtService,) {
     }
 
     async onModuleInit() {
+        await this.initializeRoles();
         await this.initializeAdmin();
     }
 
@@ -112,15 +117,45 @@ export class AuthService implements OnModuleInit {
         return user;
     }
 
+    async initializeRoles() {
+        const roles = [
+            { role_name: 'admin', description: 'Администратор платформы' },
+            { role_name: 'teacher', description: 'Преподаватель платформы' },
+            { role_name: 'student', description: 'Студент платформы' },
+        ];
+
+        this.logger.log('Инициализация ролей...');
+
+        for (const role of roles) {
+            const [createdRole, isCreated] = await this.roleRepository.findOrCreate({
+                where: { role_name: role.role_name },
+                defaults: role,
+            });
+            if (isCreated) {
+                this.logger.log(`Роль создана: ${JSON.stringify(createdRole.toJSON())}`);
+            } else {
+                this.logger.log(`Роль уже существует: ${role.role_name}`);
+            }
+        }
+    }
+
     async initializeAdmin() {
         const adminEmail = "admin@admin.com";
+        const adminRoleName = 'admin';
+
+        // Проверка наличия роли admin
+        const adminRole = await Role.findOne({ where: { role_name: adminRoleName } });
+        if (!adminRole) {
+            throw new Error('Роль admin не найдена');
+        }
+
         const existingAdmin = await this.usersService.getUserByEmail(adminEmail)
 
         if (!existingAdmin) {
             const adminDto: CreateUserDto = {
                 user_login: 'admin',
                 user_email: adminEmail,
-                role_name: "admin",
+                role_name: adminRoleName,
                 user_fio: "admin",
                 user_password: "admin1234559)"
             }

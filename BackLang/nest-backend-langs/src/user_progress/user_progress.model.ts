@@ -12,10 +12,18 @@ export enum ProgressStatus {
 interface ProgressCreationAttrs {
     student_id: number;
     course_id: number;
+    status: ProgressStatus;
+    completion_percent: number;
 }
 
 @Table({
     tableName: 'user_progress',
+    indexes: [
+        {
+            unique: true,
+            fields: ['student_id', 'course_id'],
+        },
+    ],
 })
 export class Progress extends Model<Progress, ProgressCreationAttrs> {
     @Column({type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true})

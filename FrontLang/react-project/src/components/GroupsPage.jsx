@@ -165,7 +165,7 @@ const Groups = () => {
             <div className="groups-wrapper">
                 <h2>Группы</h2>
                 <div className="groups-actions">
-                    <button className="create-course-button" onClick={() => setShowCreateModal(true)}>
+                    <button className="create-group-button" onClick={() => setShowCreateModal(true)}>
                         Создать группу
                     </button>
                     <button className="submit-button" onClick={() => setShowAssignModal(true)}>
@@ -176,6 +176,7 @@ const Groups = () => {
                     <div className="form-group">
                         <label>
                             <input
+                                className = "group-input"
                                 type="checkbox"
                                 checked={curatedOnly}
                                 onChange={() => setCuratedOnly(!curatedOnly)}

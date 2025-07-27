@@ -25,7 +25,7 @@ function Register() {
             alert(`Регистрация успешна!\nЛогин: ${login}\nПочта: ${email}\nПароль: ${password}`);
             setLogin('');
             setEmail('');
-            setRole('user');
+            setRole('student');
             setFullName('');
         } catch (error) {
             setMessage('Ошибка регистрации: ' + (error.response?.data?.message || error.message));

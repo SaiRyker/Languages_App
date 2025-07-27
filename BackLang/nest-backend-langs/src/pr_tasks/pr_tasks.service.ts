@@ -9,6 +9,7 @@ import path from "node:path";
 import fs from "node:fs";
 import * as tarStream from "tar-stream";
 import Docker from "dockerode";
+import {UpdatePrTaskDto} from "./dto/update-pr-task.dto";
 
 @Injectable()
 export class PrTasksService {
@@ -50,6 +51,41 @@ export class PrTasksService {
 
         const prTask = await this.prTaskRep.create(dto);
         return prTask;
+    }
+
+    async updatePrTask(dto: UpdatePrTaskDto): Promise<PrTask> {
+        const task = await this.prTaskRep.findByPk(dto.id_pr_task);
+        if (!task) {
+            throw new NotFoundException(`Практическое задание с id ${dto.id_pr_task} не найдено`);
+        }
+
+        const lesson = await this.lessonRep.findByPk(dto.lesson_id, {
+            attributes: ['id_lesson', 'lesson_type'],
+        });
+        if (!lesson) {
+            throw new NotFoundException(`Урок с id ${dto.lesson_id} не найден`);
+        }
+        if (lesson.get('lesson_type') !== LessonType.PRACTICAL) {
+            throw new BadRequestException(`Нельзя обновить практическое задание для урока не с типом Практика`);
+        }
+
+        await task.update({
+            lesson_id: dto.lesson_id,
+            task_name: dto.task_name,
+            description: dto.description,
+            test_code: dto.test_code,
+            language_id: dto.language_id,
+        });
+
+        return task;
+    }
+
+    async deletePrTask(id: number): Promise<void> {
+        const task = await this.prTaskRep.findByPk(id);
+        if (!task) {
+            throw new NotFoundException(`Практическое задание с id ${id} не найдено`);
+        }
+        await task.destroy();
     }
 
     async getCoursePrTasksByCId(course_id: number): Promise<PrTask[]> {
@@ -95,47 +131,42 @@ export class PrTasksService {
     }
 
     async runCodeInContainer(code: string, lang_name: string, input: string = '') {
-
-        const exportMatch = code.match(/export\s+default\s+(\w+);$/);
-        if (!exportMatch || !exportMatch[1]) {
-            throw new Error('No export default function found. Please add "export default func_name;" at the end of your code.');
-        }
-        const functionName = exportMatch[1];
-        console.log(functionName);
-
-        // Замена export default на module.exports
-        const transformedCode = code.replace(/export\s+default\s+(\w+);$/, 'module.exports = {$1};');
-        console.log(transformedCode);
-
+        let transformedCode = code;
+        let codeFile: string;
 
         const projectRoot = path.resolve(__dirname, '../../');
-        console.log(projectRoot)
-
-
         const tempDir = path.join(projectRoot, 'temp');
-        console.log(tempDir)
         if (!fs.existsSync(tempDir)) {
-            fs.mkdirSync(tempDir, {recursive: true});
+            fs.mkdirSync(tempDir, { recursive: true });
         }
 
-
-        const codeFile = lang_name === 'javascript' ? 'solution.js' : 'solution.py';
-        console.log(codeFile)
+        if (lang_name.toLowerCase() === 'javascript') {
+            codeFile = 'solution.js';
+            const exportMatch = code.match(/export\s+default\s+(\w+);$/);
+            if (!exportMatch || !exportMatch[1]) {
+                throw new Error('No export default function found. Please add "export default func_name;" at the end of your code.');
+            }
+            const functionName = exportMatch[1];
+            transformedCode = code.replace(/export\s+default\s+(\w+);$/, `module.exports = ${functionName};`);
+        } else if (lang_name.toLowerCase() === 'python') {
+            codeFile = 'solution.py';
+            // Пользовательский код выполняется напрямую, без обёртки
+            transformedCode = code;
+        } else {
+            throw new BadRequestException(`Unsupported language: ${lang_name}`);
+        }
 
         const codePath = path.join(tempDir, codeFile);
-        console.log('Code path:', codePath, 'Content:', transformedCode);
         fs.writeFileSync(codePath, transformedCode);
-        console.log('File written successfully:', fs.existsSync(codePath));
 
         let output = '';
         let errorOutput = '';
 
         try {
-            console.log(lang_name)
-            const image = lang_name === 'javascript' ? 'node:16-slim' : 'python:3.9-slim';
-            const cmd = lang_name === 'javascript' ? ['node', '/app/solution.js'] : ['python', '/app/solution.py'];
-
-            console.log(`Creating container with image: ${image}, cmd: ${cmd}`); // Отладка
+            const image = lang_name.toLowerCase() === 'javascript' ? 'node:16-slim' : 'python:3.9-slim';
+            const cmd = lang_name.toLowerCase() === 'javascript'
+                ? ['node', '/app/solution.js']
+                : ['python', '/app/solution.py'];
 
             const container = await this.docker.createContainer({
                 Image: image,
@@ -151,26 +182,24 @@ export class PrTasksService {
                     NetworkMode: 'none',
                     AutoRemove: true,
                 },
-                Volumes: {'/app': {}},
+                Volumes: { '/app': {} },
                 WorkingDir: '/app',
             });
 
             await container.start();
 
             const tar = tarStream.pack();
-            tar.entry({name: codeFile}, fs.readFileSync(codePath));
+            tar.entry({ name: codeFile }, fs.readFileSync(codePath));
             tar.finalize();
-            await container.putArchive(tar, {path: '/app'});
-            console.log('File uploaded to container');
+            await container.putArchive(tar, { path: '/app' });
 
             const stream = await container.attach({
                 stream: true,
                 stdin: true,
                 stdout: true,
                 stderr: true,
-                logs: true, // Подтягиваем логи для лучшего захвата
+                logs: true,
             });
-
 
             await new Promise<void>((resolve, reject) => {
                 let buffer = Buffer.alloc(0);
@@ -178,84 +207,53 @@ export class PrTasksService {
                 stream.on('data', (chunk: Buffer) => {
                     buffer = Buffer.concat([buffer, chunk]);
 
-
                     while (buffer.length >= 8) {
                         const header = buffer.slice(0, 8);
                         const streamType = header[0];
-                        const payloadLength = header.readUInt32BE(4); // Длина данных
+                        const payloadLength = header.readUInt32BE(4);
 
                         if (buffer.length < 8 + payloadLength) {
-                            // Ждем, пока придут все данные
                             break;
                         }
 
                         const payload = buffer.slice(8, 8 + payloadLength).toString();
                         if (streamType === 1) {
-                            // stdout
                             output += payload;
-                            console.log('Processed stdout:', payload);
                         } else if (streamType === 2) {
-                            // stderr
                             errorOutput += payload;
-                            console.log('Processed stderr:', payload);
                         }
 
-                        // Удаляем обработанный блок из буфера
                         buffer = buffer.slice(8 + payloadLength);
                     }
                 });
 
                 stream.on('error', (err) => {
-                    console.error('Stream error:', err.message);
                     errorOutput += err.message;
                     reject(err);
                 });
 
                 stream.on('end', () => {
-                    console.log('Stream ended');
                     resolve();
                 });
             });
-
 
             stream.write(input + '\n');
             stream.end();
 
             const waitResult = await container.wait();
-            console.log('Container exit code:', waitResult.StatusCode);
-
             if (waitResult.StatusCode !== 0) {
                 throw new Error(errorOutput || 'Code execution failed');
             }
 
-            console.log('Final output:', output);
-            console.log({output})// Отладка перед возвратом
-            return {output};
+            return { output };
         } catch (err) {
-            console.error('Error in runCodeInContainer:', err.message);
-            return {output: '', error: err.message};
+            return { output: '', error: err.message };
         } finally {
-            console.log('Deleting file:', codePath);
             if (fs.existsSync(codePath)) {
                 fs.unlinkSync(codePath);
             }
-
         }
-        ;
     }
 
-    async updateTask(id_pr_task: number, data: { task_name: string; description: string; test_code: string; language_id: number; lesson_id: number }) {
-        const task = await this.prTaskRep.findByPk(id_pr_task);
-        if (!task) {
-            throw new NotFoundException(`Task with id ${id_pr_task} not found`);
-        }
-        return task.update({
-            lesson_id: data.lesson_id,
-            task_name: data.task_name,
-            language_id: data.language_id,
-            description: data.description,
-            test_code: data.test_code
-        });
-    }
 
 }

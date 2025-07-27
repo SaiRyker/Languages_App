@@ -9,6 +9,7 @@ import {Type} from "class-transformer";
 import {CheckAnswerDto} from "./dto/check-answer.dto";
 import {TSolution} from "../test_solutions/test_solutions.model";
 import {User} from "../users/user.model";
+import {UpdateTaskDto} from "./dto/update-task.dto";
 
 @Injectable()
 export class TestTasksService {
@@ -45,6 +46,54 @@ export class TestTasksService {
 
         const testTask = await this.testTaskRep.create(dto);
         return testTask;
+    }
+
+    async updateTestTask(dto: UpdateTaskDto): Promise<TestTask> {
+        const testTask = await this.testTaskRep.findByPk(dto.id_t_task);
+        if (!testTask) {
+            throw new NotFoundException(`Тестовое задание с id ${dto.id_t_task} не найдено`);
+        }
+        console.log(testTask)
+
+        const lesson = await this.lessonRep.findByPk(dto.lesson_id, {
+            attributes: ['id_lesson', 'lesson_type'],
+        });
+        if (!lesson) {
+            throw new NotFoundException(`Урок с id ${dto.lesson_id} не найден`);
+        }
+
+        if (lesson.get('lesson_type') !== LessonType.TEST) {
+            throw new BadRequestException(`Нельзя обновить тестовое задание для урока не с типом Тест`);
+        }
+
+        // Проверяем, что все correct элементы существуют в task_answers
+        const invalidCorrects = dto.correct.filter((answer) => !dto.task_answers.includes(answer));
+        console.log(dto.correct)
+        console.log(dto.task_answers)
+        console.log(invalidCorrects)
+        if (invalidCorrects.length > 0) {
+            throw new BadRequestException(`Правильные ответы должны быть из списка вариантов ответа`);
+        }
+
+        // Обновляем поля
+        await testTask.update({
+            lesson_id: dto.lesson_id,
+            task_name: dto.task_name,
+            description: dto.description,
+            task_answers: dto.task_answers,
+            correct: dto.correct,
+        });
+
+        return testTask;
+    }
+
+    async deleteTestTask(id: number): Promise<void> {
+        const testTask = await this.testTaskRep.findByPk(id);
+        if (!testTask) {
+            throw new NotFoundException(`Тестовое задание с id ${id} не найдено`);
+        }
+
+        await testTask.destroy();
     }
 
     async getAllCourseTestTasksByCId(course_id: number): Promise<TestTask[]> {
