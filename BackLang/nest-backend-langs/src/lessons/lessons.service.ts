@@ -36,18 +36,6 @@ export class LessonsService {
         return lesson.update(updateLessonDto);
     }
 
-    async deleteLesson(lessonId: number) {
-        const lesson = await this.lessonRep.findByPk(lessonId, {
-            include: [{ model: CModule, as: 'module' }],
-        });
-        if (!lesson) {
-            throw new NotFoundException(`Урок с ID ${lessonId} не найден`);
-        }
-
-        await lesson.destroy();
-        return { message: 'Урок удалён' };
-    }
-
     async updateLessonOrder(moduleId: number, lessonOrder: { id_lesson: number; order_number: number }[]) {
         console.log('updateLessonOrder called with:', { moduleId, lessonOrder });
 
@@ -98,6 +86,18 @@ export class LessonsService {
 
             return { message: 'Порядок уроков обновлён' };
         });
+    }
+
+    async deleteLesson(lessonId: number) {
+        const lesson = await this.lessonRep.findByPk(lessonId, {
+            include: [{ model: CModule, as: 'module' }],
+        });
+        if (!lesson) {
+            throw new NotFoundException(`Урок с ID ${lessonId} не найден`);
+        }
+
+        await lesson.destroy();
+        return { message: 'Урок удалён' };
     }
 
     async getLessonsByCourseId(course_id: number): Promise<Lesson[]> {
